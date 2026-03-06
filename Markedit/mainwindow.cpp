@@ -3,7 +3,10 @@
  * Copyright (C), 2026, MyslZhao 159505988+MyslZhao@users.noreply.github.com
  *
  * @file    mainwindow.cpp
- * @brief   主窗口入口和槽方法
+ * @brief   主窗口入口和槽的建立
+ * @details
+ * 对窗口执行相关初始化操作，
+ * 并绑定事件与对应控件/组件。
  *
  * @author  MyslZhao
  */
@@ -24,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //初始化相关变量
+    _current_path = QString();
+    isUntitled = true;
+
     // HACK:无法在.ui中添加Qsplliter组件，手动设置Qsplitter
     QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
     splitter->addWidget(ui->markdownEdit);
@@ -38,9 +45,21 @@ MainWindow::MainWindow(QWidget *parent)
                                 "Start writing Markdown on the left..."
                                 "</p>");
 
-    connect(ui->markdownEdit, &QPlainTextEdit::textChanged,
-            this, &MainWindow::updatePreview);
+    connect(ui->action_new, &QAction::triggered, this,
+            &MainWindow::newFile);
+    connect(ui->action_open, &QAction::triggered, this,
+            &MainWindow::openFile);
+    connect(ui->action_save, &QAction::triggered, this,
+            &MainWindow::saveFile);
+    connect(ui->action_saveas, &QAction::triggered, this,
+            &MainWindow::saveFileAs);
+    connect(ui->action_exit, &QAction::triggered, this,
+            &QWidget::close);
 
+    connect(ui->markdownEdit, &QPlainTextEdit::textChanged, this,
+            &MainWindow::_documentWasModified);
+    connect(ui->markdownEdit, &QPlainTextEdit::textChanged, this,
+            &MainWindow::_updatePreview);
 }
 
 /**
@@ -54,11 +73,13 @@ MainWindow::~MainWindow()
 /**
  * @brief 更新Markdown预览
  */
-void MainWindow::updatePreview()
+void MainWindow::_updatePreview()
 {
     QString markdownText = ui->markdownEdit->toPlainText();
     if (markdownText.isEmpty()) {
-        ui->previewBrowser->setHtml("<p><i>Nothing to preview...</i></p>");
+        ui->previewBrowser->setHtml("<p style = 'color: #656565'>"
+                                    "<i>Nothing to preview...</i>"
+                                    "</p>");
         return;
     }
 

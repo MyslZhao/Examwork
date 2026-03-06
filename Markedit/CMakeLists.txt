@@ -20,12 +20,14 @@ set(PROJECT_SOURCES
     mainwindow.cpp
     mainwindow.hpp
     mainwindow.ui
+    menuFileHandle.cpp
     # 如果有翻译文件，可以添加：
     # Markedit_zh_CN.ts
 )
 
 # 创建可执行文件
-add_executable(Markedit ${PROJECT_SOURCES})
+add_executable(Markedit ${PROJECT_SOURCES}
+    highlighter.hpp highlighter.cpp)
 
 # 链接 Qt 和 cmark 库
 target_link_libraries(Markedit PRIVATE

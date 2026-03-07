@@ -28,6 +28,7 @@ public:
     explicit Highlighter(QTextDocument *parent = nullptr);
 
 protected:
+    /// 执行高亮
     void highlightBlock(const QString &text) override;
 
 private:
@@ -39,6 +40,7 @@ private:
 
     QVector<HighlightRule> _highlight_rules; // 存储所有规则
 
+    // NOTE: 由于跨行代码块语法高亮实现过于复杂，故舍弃了该语法的语法高亮
     // 标题高亮
     QTextCharFormat heading1_format;
     QTextCharFormat heading2_format;
@@ -46,6 +48,9 @@ private:
     QTextCharFormat heading4_format;
     QTextCharFormat heading5_format;
     QTextCharFormat heading6_format;
+
+    /// 分割线
+    QTextCharFormat hr_format;
 
     /// 粗体高亮
     QTextCharFormat bold_format;
@@ -55,7 +60,8 @@ private:
     QTextCharFormat quote_format;
 
     /// 链接高亮/图片链接高亮
-    QTextCharFormat link_format;
+    QTextCharFormat linktext_format;
+    QTextCharFormat linkurl_format;
     /// 有序列表高亮
     QTextCharFormat orderedlist_format;
     /// 无序列表高亮
@@ -63,8 +69,6 @@ private:
 
     /// 内嵌代码高亮
     QTextCharFormat code_format;
-    /// 代码块高亮
-    QTextCharFormat codeblock_format;
 
     /// 转义字符高亮
     QTextCharFormat slash_format;
@@ -77,9 +81,6 @@ private:
     void _set_highlight_style();
     /// 设置匹配规则
     void _set_match_rule();
-
-    /// 执行高亮
-    void start(const QString &text);
 
 };
 

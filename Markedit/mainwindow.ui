@@ -17,26 +17,14 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QWidget" name="centralPlaceholder" native="true">
-      <widget class="QPlainTextEdit" name="markdownEdit">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>170</y>
-         <width>104</width>
-         <height>85</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="previewBrowser">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>140</y>
-         <width>256</width>
-         <height>192</height>
-        </rect>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="markdownEdit"/>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="previewBrowser"/>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
@@ -61,7 +49,18 @@
     <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>
+   <widget class="QMenu" name="menu_edit">
+    <property name="title">
+     <string>编辑(&amp;E)</string>
+    </property>
+    <addaction name="action_undo"/>
+    <addaction name="action_redo"/>
+    <addaction name="separator"/>
+    <addaction name="action_find"/>
+    <addaction name="action_replace"/>
+   </widget>
    <addaction name="menu_file"/>
+   <addaction name="menu_edit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_new">
@@ -87,6 +86,26 @@
   <action name="action_exit">
    <property name="text">
     <string>退出(&amp;X)</string>
+   </property>
+  </action>
+  <action name="action_undo">
+   <property name="text">
+    <string>撤销(&amp;Z)</string>
+   </property>
+  </action>
+  <action name="action_redo">
+   <property name="text">
+    <string>重做(&amp;Y)</string>
+   </property>
+  </action>
+  <action name="action_find">
+   <property name="text">
+    <string>查找(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_replace">
+   <property name="text">
+    <string>替换(&amp;R)</string>
    </property>
   </action>
  </widget>

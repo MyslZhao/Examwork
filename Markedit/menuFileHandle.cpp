@@ -25,9 +25,9 @@ void MainWindow::newFile()
 {
     if (_maybeSave())
     {
-        ui->markdownEdit->clear();
-        ui->markdownEdit->document()->setModified(false);
-        isUntitled = true;
+        ui -> markdownEdit -> clear();
+        ui -> markdownEdit -> document() -> setModified(false);
+        _is_untitled = true;
         _current_path.clear();
         _setCurrentFileName(QString());
     }
@@ -58,7 +58,7 @@ void MainWindow::openFile()
  */
 bool MainWindow::saveFile()
 {
-    if (isUntitled)
+    if (_is_untitled)
     {
         return saveFileAs();
     }
@@ -103,11 +103,11 @@ bool MainWindow::_saveTo(const QString &file_name)
     }
 
     QTextStream stream(&file);
-    stream << ui->markdownEdit->toPlainText();
+    stream << ui -> markdownEdit -> toPlainText();
     file.close();
 
-    ui->markdownEdit->document()->setModified(false);
-    isUntitled = false;
+    ui -> markdownEdit -> document() -> setModified(false);
+    _is_untitled = false;
     _setCurrentFileName(file_name);
     statusBar()->showMessage("文件已保存", 2000);
     return true;
@@ -119,7 +119,7 @@ bool MainWindow::_saveTo(const QString &file_name)
  */
 bool MainWindow::_maybeSave()
 {
-    if (ui->markdownEdit->document()->isModified())
+    if (ui -> markdownEdit -> document() -> isModified())
     {
         QMessageBox::StandardButton query;
         query = QMessageBox::warning(this,
@@ -159,9 +159,9 @@ void MainWindow::_loadFile(const QString &file_name)
     QString content = stream.readAll();
     file.close();
 
-    ui->markdownEdit->setPlainText(content);
-    ui->markdownEdit->document()->setModified(false);
-    isUntitled = false;
+    ui -> markdownEdit -> setPlainText(content);
+    ui -> markdownEdit -> document() -> setModified(false);
+    _is_untitled = false;
     _setCurrentFileName(file_name);
     statusBar()->showMessage("文件加载完毕", 2000);
 }
@@ -170,11 +170,11 @@ void MainWindow::_loadFile(const QString &file_name)
  * @brief 更新主窗口文件名显示
  * @param fileName
  */
-void MainWindow::_setCurrentFileName(const QString &fileName)
+void MainWindow::_setCurrentFileName(const QString &file_name)
 {
-    _current_path = fileName;
-    QString shownName = fileName.isEmpty() ? "未命名" : QFileInfo(fileName).fileName();
-    setWindowTitle(shownName + "[*] - Markedit");
+    _current_path = file_name;
+    QString shown_name = file_name.isEmpty() ? "未命名" : QFileInfo(file_name).fileName();
+    setWindowTitle(shown_name + "[*] - Markedit");
 }
 
 /**
@@ -182,7 +182,7 @@ void MainWindow::_setCurrentFileName(const QString &fileName)
  */
 void MainWindow::_documentWasModified()
 {
-    setWindowModified(ui->markdownEdit->document()->isModified());
+    setWindowModified(ui -> markdownEdit -> document() -> isModified());
 }
 
 /**
@@ -192,8 +192,8 @@ void MainWindow::_documentWasModified()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (_maybeSave()) {
-        event->accept();
+        event -> accept();
     } else {
-        event->ignore();
+        event -> ignore();
     }
 }

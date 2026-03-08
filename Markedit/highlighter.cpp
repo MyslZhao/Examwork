@@ -28,8 +28,8 @@ Highlighter::Highlighter(QTextDocument *parent)
  * 此外又以原版vscode markdown高亮样式填补未被高亮的语法
  */
 void Highlighter::_set_highlight_style(){
-    // 标题1-6 火红色
-    QColor _title_color = QColor(0xBE, 0x56, 0x3A);
+    // 标题1-6 橙红色
+    QColor _title_color = QColor(0xDB, 0x4A, 0x2A);
 
     heading1_format.setForeground(_title_color);
 
@@ -53,7 +53,7 @@ void Highlighter::_set_highlight_style(){
     italic_format.setFontItalic(true);
 
     // 引用块 蓝色
-    quote_format.setForeground(Qt::blue);
+    quote_format.setForeground(QColor(0x1D, 0x7A, 0x9B));
 
     // 链接 文本:浅绿色
     linktext_format.setForeground(QColor(0x90, 0xEE, 0x90));

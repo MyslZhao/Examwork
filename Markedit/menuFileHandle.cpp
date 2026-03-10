@@ -103,7 +103,7 @@ bool MainWindow::_saveTo(const QString &file_name)
     }
 
     QTextStream stream(&file);
-    stream << ui -> markdownEdit -> toPlainText();
+    stream << (ui -> markdownEdit -> toPlainText());
     file.close();
 
     ui -> markdownEdit -> document() -> setModified(false);
@@ -150,12 +150,13 @@ void MainWindow::_loadFile(const QString &file_name)
     {
         QMessageBox::warning(this,
                              "错误",
-                             "该文件为二进制文件，无法编辑: " + file.errorString()
+                             "该文件无法编辑: " + file.errorString()
                              );
         return;
     }
 
     QTextStream stream(&file);
+    stream.setEncoding(QStringConverter::Utf8);
     QString content = stream.readAll();
     file.close();
 

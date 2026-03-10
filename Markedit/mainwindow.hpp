@@ -21,6 +21,13 @@
 #include <QStackedWidget>
 #include <QTextDocument>
 #include <QCheckBox>
+#include <QLabel>
+#include <QPushButton>
+#include <QTextStream>
+#include <QHash>
+#include <QTreeView>
+#include <QFileSystemModel>
+#include <QStandardItemModel>
 // -*- encoding: utf-8 -*-
 
 QT_BEGIN_NAMESPACE
@@ -87,12 +94,29 @@ private slots:
     /// 更新“大纲”
     void _updateOutline();
     /// “大纲”按钮触发事件
-    void onOutlineItemClicked(QListWidgetItem *item);
+    void onOutlineItemClicked(const QModelIndex &index);
+
+    // 侧边栏"Notes"相关事件
+    /// “笔记”按钮触发事件
+    void onNoteTreeClicked(const QModelIndex &index);
 
     // 状态栏
+    /// 更新光标位置信息
     void _updateCursorPos();
+    /// 编码按钮触发事件
     void onEncodingBtnClicked();
+    /// 处理更改编码事件
     void _handleEncodingAction(const QString &encoding, bool reopen);
+    /// 选择编码操作类型对话框
+    bool _showEncodingOpe(bool &pass_status);
+    /// 选择新编码对话框
+    QString _showEncodingType(bool &pass_status);
+    /// 执行重新打开操作
+    void _handleReopenAction(const QString &encoding);
+    /// 执行重新保存操作
+    void _handleResaveAction(const QString &encoding);
+    /// 从字符串加载编码类型
+    QStringConverter::Encoding _stringToEncoding(const QString &name);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -115,18 +139,36 @@ private:
     // 活动栏按钮动作
     /// 大纲按钮事件
     QAction *outline_action;
+    /// 笔记按钮事件
+    QAction *notes_action;
 
     // 可堆叠面板
     /// 大纲面板
-    QListWidget *outline_list;
+    QTreeView *outline_tree;
+    /// 笔记面板
+    QTreeView *notes_tree;
 
-    // 其他相关变量
+    // 状态栏
+    /// 光标位置组件
+    QLabel *cursor_pos;
+    /// 编码按钮
+    QPushButton *encoding_btn;
+
+    // 其他相关变量/辅助变量
+    /// 编码映射表
+    static const QHash<QString, QStringConverter::Encoding> ENCOMAP;
     /// 文件路径
     QString _current_path;
     /// 是否为新文件
     bool _is_untitled;
-    /// 条目与块号映射
-    QMap<QListWidgetItem*, int> outline_pos;
+    /// 文件编码
+    QString _current_encoding;
+    /// 初始笔记目录
+    QString _notes_path;
+    /// 大纲层级模型
+    QStandardItemModel *_outline_system;
+    /// 文件系统模型
+    QFileSystemModel *_notes_system;
 
 
 };

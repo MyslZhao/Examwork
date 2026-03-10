@@ -21,7 +21,8 @@ set(PROJECT_SOURCES
     highlighter.cpp
     menuEditHandle.cpp
     barOutlineHandle.cpp
-    statusBar.cpp
+    statusBarHandle.cpp
+    barNotesHandle.cpp
     # Markedit_zh_CN.ts
 )
 

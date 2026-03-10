@@ -220,17 +220,24 @@ void MainWindow::findNext(const QString &text, QTextDocument::FindFlags flags, b
     if (use_regex)
     {
         QRegularExpression regex(text);
-        regex.errorString();
+
         if (!regex.isValid())
         {
             return _showRegexError(regex.errorString());
         }
-        found = ui -> markdownEdit -> document() -> find(regex, ui -> markdownEdit -> textCursor().position(), flags).isNull() == false;
-        // 光标指示
-        QTextCursor cursor = ui -> markdownEdit -> document() -> find(regex, ui -> markdownEdit -> textCursor().selectionStart(), flags);
-        if (!cursor.isNull())
+
+        QPlainTextEdit *edit = ui->markdownEdit;
+        QTextCursor cursor = edit -> textCursor();
+
+        QTextCursor result = edit -> document() -> find(
+            regex,
+            cursor.selectionStart(),
+            flags
+            );
+
+        if (!result.isNull())
         {
-            ui -> markdownEdit -> setTextCursor(cursor);
+            edit -> setTextCursor(cursor);
             found = true;
         }
     }

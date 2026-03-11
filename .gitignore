@@ -1,3 +1,4 @@
+# c++ 项目gitignore标准模板
 # Prerequisites
 *.d
 
@@ -39,3 +40,6 @@
 
 # debug information files
 *.dwo
+
+# 日志文件
+*.log

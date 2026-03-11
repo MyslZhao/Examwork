@@ -120,12 +120,26 @@ MainWindow::MainWindow(QWidget *parent)
     _notes_system -> setNameFilterDisables(false);
 
     notes_tree -> setModel(_notes_system);
+    notes_tree -> setHeaderHidden(true);
     notes_tree -> hideColumn(1);
     notes_tree -> hideColumn(2);
     notes_tree -> hideColumn(3);
     notes_tree -> setRootIndex(_notes_system -> index(_notes_path));
 
-    side_stack -> addWidget(notes_tree);
+    QWidget *note_page = new QWidget;
+    QVBoxLayout *notes_layout = new QVBoxLayout(note_page);
+    notes_layout -> setContentsMargins(0, 5, 0, 0);
+    notes_layout -> setSpacing(2);
+
+    _note_name = new QLabel("当前未打开笔记");
+    _note_name -> setAlignment(Qt::AlignCenter);
+    _note_name -> setStyleSheet("font-weight: bold; color: #888;");
+
+    notes_layout -> addWidget(_note_name);
+
+    notes_layout -> addWidget(notes_tree);
+
+    side_stack -> addWidget(note_page);
 
     // 状态栏
     QStatusBar *status = statusBar();
@@ -150,6 +164,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui -> action_open, &QAction::triggered, this, &MainWindow::openFile);
     connect(ui -> action_save, &QAction::triggered, this, &MainWindow::saveFile);
     connect(ui -> action_saveas, &QAction::triggered, this, &MainWindow::saveFileAs);
+    connect(ui -> action_mkdir, &QAction::triggered, this, &MainWindow::newNote);
+    connect(ui -> action_ls, &QAction::triggered, this, &MainWindow::openNote);
+    connect(ui -> action_cp, &QAction::triggered, this, &MainWindow::addToNote);
+    connect(ui -> action_rmdir, &QAction::triggered, this, &MainWindow::deleteNote);
+    connect(ui -> action_mov, &QAction::triggered, this, &MainWindow::removeFromNote);
     connect(ui -> action_exit, &QAction::triggered, this, &QWidget::close);
 
     // "编辑"菜单连接
@@ -163,9 +182,9 @@ MainWindow::MainWindow(QWidget *parent)
         {
             if (checked)
             {
+                notes_action -> setChecked(false);
                 side_stack -> setCurrentWidget(outline_tree);
                 side_dock -> show();
-                notes_action -> setChecked(false);
             }
             else
             {
@@ -179,9 +198,9 @@ MainWindow::MainWindow(QWidget *parent)
         {
             if (checked)
             {
+                outline_action -> setChecked(false);
                 side_stack -> setCurrentWidget(notes_tree);
                 side_dock -> show();
-                outline_action -> setChecked(false);
             }
             else
             {
@@ -247,17 +266,13 @@ void MainWindow::_updatePreview()
  */
 void MainWindow::_syncPreviewScroll()
 {
-    // 获取编辑区的总块数（行数）
     int total_blocks = ui -> markdownEdit -> document() -> blockCount();
     if (total_blocks <= 1) return;
 
-    // 获取当前光标所在的块号
     int current_block = ui -> markdownEdit -> textCursor().blockNumber();
 
-    // 计算比例
     double ratio = static_cast<double>(current_block) / (total_blocks - 1);
 
-    // 获取预览区的垂直滚动条
     QScrollBar *preview_vertiscroll = ui -> previewBrowser -> verticalScrollBar();
     int max_scroll = preview_vertiscroll -> maximum();
     preview_vertiscroll -> setValue(static_cast<int>(ratio * max_scroll));

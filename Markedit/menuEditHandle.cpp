@@ -19,7 +19,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-// TODO: 实现导航栏"编辑"菜单按钮功能
 /**
  * @brief 通过位掩码把多个标志整合为标志组
  * @param[in] case_check “大小写区分”复选框指针

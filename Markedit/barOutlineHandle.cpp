@@ -28,7 +28,6 @@ void MainWindow::_updateOutline()
     parent_stack.append(_outline_system -> invisibleRootItem());
 
     int block_num = 0;
-    int last_level = 0;
 
     for (const QString &line : lines) {
         QRegularExpressionMatch match = re.match(line);
@@ -37,27 +36,17 @@ void MainWindow::_updateOutline()
             QString title = match.captured(3);
             int level = levelStr.length();
 
-            if (level > last_level)
+            while (parent_stack.size() > level)
             {
-                while (parent_stack.size() <= level)
-                {
-                    parent_stack.append(parent_stack.last());
-                }
-            }
-            else if (level < last_level)
-            {
-                while (parent_stack.size() > level + 1)
-                {
-                    parent_stack.removeLast();
-                }
+                parent_stack.removeLast();
             }
 
             QStandardItem *item = new QStandardItem(title);
             item -> setData(block_num, Qt::UserRole);
 
-            parent_stack.append(item);
+            parent_stack.last() -> appendRow(item);
 
-            last_level = level;
+            parent_stack.append(item);
         }
         block_num += 1;
     }

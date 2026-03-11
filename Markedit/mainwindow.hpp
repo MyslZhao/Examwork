@@ -61,6 +61,20 @@ private slots:
     bool saveFile();
     /// 另存为
     bool saveFileAs();
+    /// 新建笔记
+    void newNote();
+    /// 打开笔记
+    void openNote();
+    /// 添加到笔记
+    void addToNote();
+    /// 丢弃笔记
+    void deleteNote();
+    /// 从笔记中移除文件
+    void removeFromNote();
+    /// 显示错误笔记文件夹信息
+    void _showInvalidNote();
+    /// 询问怎么处理被移除的文件
+    void _whetherSave(const QStringList &files);
     /// 编辑中断询问
     bool _maybeSave();
     /// 载入目标文件
@@ -157,19 +171,21 @@ private:
     // 其他相关变量/辅助变量
     /// 编码映射表
     static const QHash<QString, QStringConverter::Encoding> ENCOMAP;
-    /// 文件路径
+    /// 文件路径(相对路径)
     QString _current_path;
     /// 是否为新文件
     bool _is_untitled;
     /// 文件编码
     QString _current_encoding;
-    /// 初始笔记目录
+    /// 笔记名字
+    QLabel *_note_name;
+    /// 储存所有笔记的目录(绝对路径)
     QString _notes_path;
+    /// 当前笔记所在路径
+    QString _current_note_path;
     /// 大纲层级模型
     QStandardItemModel *_outline_system;
     /// 文件系统模型
     QFileSystemModel *_notes_system;
-
-
 };
 #endif // MAINWINDOW_HPP

@@ -56,7 +56,6 @@ QTextDocument::FindFlags MainWindow::_getFlags(QCheckBox *case_check, QCheckBox 
  *
  * 为保证搜索结果正确，在查找前强制要求文件已保存
  *
- * TODO: 初次查找后按钮文本变换
  * NOTE: 该对话框架构基本确定，尽量避免架构上的改动
  * NOTE: 考虑后续按钮改用图标
  */

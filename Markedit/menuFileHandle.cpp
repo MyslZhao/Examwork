@@ -129,44 +129,8 @@ void MainWindow::newNote()
 
     _current_note_path = note_path;
     _note_name -> setText(note_name);
-    notes_tree -> setRootIndex(_notes_system -> index(note_path));
-}
 
-/**
- * @brief 打开笔记操作
- */
-void MainWindow::openNote()
-{
-    QString dir = QFileDialog::getExistingDirectory(this,
-                                                    "选择笔记",
-                                                    _notes_path
-                                                    );
-    if (dir.isEmpty())
-    {
-        return;
-    }
-
-    if (!dir.startsWith(_notes_path + "/") && dir != _notes_path)
-    {
-        return _showInvalidNote();
-    }
-
-    QString new_note_name = QFileInfo(dir).fileName();
-    _note_name -> setText(new_note_name);
-    _current_note_path = dir;
-
-    notes_tree -> setRootIndex(_notes_system -> index(dir));
-
-    QDir note_dir(dir);
-    note_dir.setNameFilters(QStringList() << "*.md");
-    note_dir.setFilter(QDir::Files);
-    QStringList files = note_dir.entryList();
-    if (!files.isEmpty())
-    {
-        files.sort();
-        QString display_file = dir + "/" + files.first();
-        _loadFile(display_file);
-    }
+    notes_tree -> expand(_notes_system -> index(note_path));
 }
 
 /**
@@ -174,30 +138,58 @@ void MainWindow::openNote()
  */
 void MainWindow::addToNote()
 {
-    if (_current_path.isEmpty() || ui -> markdownEdit -> document() -> isModified())
+    if(_current_note_path.isEmpty())
     {
-        if (!saveFile())
-        {
-            return;
-        }
-    }
-
-    QString target_dir = QFileDialog::getExistingDirectory(this,
-                                                           "选择笔记",
-                                                           _notes_path
-                                                           );
-    if(target_dir.isEmpty())
-    {
+        QMessageBox::information(this,
+                                 "提示",
+                                 "请先在侧边栏选择一个笔记。"
+                                 );
         return;
     }
 
-    if (!target_dir.startsWith(_notes_path + "/") && target_dir != _notes_path)
+    if (_is_untitled)
     {
-        return _showInvalidNote();
+        QString base_name = "intro.md";
+        QString target_path = _current_note_path + "/" + base_name;
+
+        if (QFile::exists(target_path))
+        {
+            int i = 1;
+            while (QFile::exists(_current_note_path + "/intro" + QString::number(i) + ".md"))
+            {
+                i += 1;
+            }
+            target_path = _current_note_path + "/intro" + QString::number(i) + ".md";
+        }
+
+        if (_saveTo(target_path))
+        {
+            QMessageBox::information(this,
+                                     "成功",
+                                     "文件以保存到笔记。"
+                                     );
+        }
+        else
+        {
+            QMessageBox::warning(this,
+                                 "错误",
+                                 "保存失败。"
+                                 );
+        }
+        return;
     }
 
     QString file_name = QFileInfo(_current_path).fileName();
-    QString target_path = target_dir + "/" + file_name;
+    QString target_path = _current_note_path + "/" + file_name;
+
+    if (QFileInfo(_current_path).absolutePath() == _current_note_path)
+    {
+        QMessageBox::information(this,
+                                 "提示 ",
+                                 "文件以存在于该笔记中。"
+                                 );
+        return;
+    }
 
     if (QFile::exists(target_path))
     {
@@ -232,29 +224,22 @@ void MainWindow::addToNote()
     }
 }
 
+/**
+ * @brief 丢弃笔记
+ */
 void MainWindow::deleteNote()
 {
-    QModelIndex index = notes_tree -> currentIndex();
-    if (!index.isValid())
+    if (_current_note_path.isEmpty())
     {
         QMessageBox::information(this,
                                  "提示",
-                                 "未打开笔记文件夹"
+                                 "亲在侧边栏打开一个笔记。"
                                  );
         return;
     }
 
-    QString path = _notes_system -> filePath(index);
+    QString path = _current_note_path;
     QFileInfo info(path);
-    if (!info.isDir())
-    {
-        return _showInvalidNote();
-    }
-
-    if (!path.startsWith(_notes_path + "/") && path != _notes_path)
-    {
-        return _showInvalidNote();
-    }
 
     int ret = QMessageBox::question(this,
                                     "确认丢弃",
@@ -274,13 +259,9 @@ void MainWindow::deleteNote()
                                  "成功",
                                  "笔记已删除。"
                                  );
-        if (_current_path.startsWith(path + "/") || _current_note_path == path)
-        {
-            _current_note_path.clear();
-            _note_name -> setText("未打开笔记");
-        }
+        _current_note_path.clear();
+        _note_name -> setText("未打开笔记");
 
-        _notes_system -> setRootPath("");
         notes_tree -> setRootIndex(_notes_system -> index(_notes_path));
     }
     else
@@ -292,6 +273,9 @@ void MainWindow::deleteNote()
     }
 }
 
+/**
+ * @brief 从笔记中移除文件
+ */
 void MainWindow::removeFromNote()
 {
     if (_current_note_path.isEmpty())
@@ -313,28 +297,7 @@ void MainWindow::removeFromNote()
         return;
     }
 
-    QMessage
-}
-
-/**
- * @brief 显示错误的笔记文件夹
- * @details
- * 当选择的“笔记”文件夹并不在预期父文件夹下
- * 或者所选择的不是文件夹时触发
- *
- * 显示未选择程序预期的文件夹错误
- *
- * HACK: 当前使用的是文件夹作为“笔记”的实际载体
- *      后续可能考虑通过外部文件作为“笔记”内文件链接载体
- *      来解决这类问题
- */
-void MainWindow::_showInvalidNote()
-{
-    QMessageBox::warning(this,
-                         "错误",
-                         "请选择正确的笔记文件夹"
-                         );
-    return;
+    _whetherSave(files);
 }
 
 /**
@@ -349,9 +312,9 @@ void MainWindow::_whetherSave(const QStringList &files)
     QPushButton *delete_btn = quirey.addButton("直接删除", QMessageBox::DestructiveRole);
     QPushButton *presave_btn = quirey.addButton("另存为后删除", QMessageBox::ActionRole);
     QPushButton *cancel_btn = quirey.addButton("取消", QMessageBox::RejectRole);
-    quirey.exec();
+    auto result = quirey.exec();
 
-    if (quirey.clickedButton() == cancel_btn)
+    if (result == QDialog::Rejected || quirey.clickedButton() == cancel_btn)
     {
         return;
     }
@@ -386,17 +349,49 @@ void MainWindow::_whetherSave(const QStringList &files)
                 {
                     continue;
                 }
-                QFile::remove(target_path);
-            }
+                QString temp_path = save_dir + "/temp_" + info.fileName();
 
-            if (!QFile::copy(file_path, target_path))
+                if (!QFile::copy(file_path, temp_path))
+                {
+                    QMessageBox::warning(this,
+                                         "保存失败",
+                                         QString("文件 \"%1\" 移动失败。")
+                                             .arg(info.fileName())
+                                         );
+                    continue;
+                }
+
+                if (QFile::exists(target_path) && !QFile::remove(target_path))
+                {
+                    QMessageBox::warning(this,
+                                         "同名冲突",
+                                         "存在同名文件"
+                                         );
+                    QFile::remove(temp_path);
+                    continue;
+                }
+
+                if (!QFile::rename(temp_path, target_path))
+                {
+                    QMessageBox::warning(this,
+                                         "同名冲突",
+                                         "存在同名文件"
+                                         );
+                    QFile::remove(temp_path);
+                    continue;
+                }
+            }
+            else
             {
-                QMessageBox::warning(this,
-                                     "错误",
-                                     QString("无法复制文件 \"%1\" 到目标位置。")
-                                        .arg(info.fileName())
-                                     );
-                continue;
+                if (!QFile::copy(file_path, target_path))
+                {
+                    QMessageBox::warning(this,
+                                         "错误",
+                                         QString("无法复制文件 \"%1\" 到目标位置。")
+                                             .arg(info.fileName())
+                                         );
+                    continue;
+                }
             }
         }
 
@@ -440,6 +435,7 @@ bool MainWindow::_saveTo(const QString &file_name)
     }
 
     QTextStream stream(&file);
+    stream.setEncoding(_stringToEncoding(_current_encoding));
     stream << (ui -> markdownEdit -> toPlainText());
     file.close();
 
@@ -493,7 +489,7 @@ void MainWindow::_loadFile(const QString &file_name)
     }
 
     QTextStream stream(&file);
-    stream.setEncoding(QStringConverter::Utf8);
+    stream.setEncoding(_stringToEncoding(_current_encoding));
     QString content = stream.readAll();
     file.close();
 
@@ -506,7 +502,7 @@ void MainWindow::_loadFile(const QString &file_name)
 
 /**
  * @brief 更新主窗口文件名显示
- * @param fileName
+ * @param[in] fileName 目标文件的绝对路径
  */
 void MainWindow::_setCurrentFileName(const QString &file_name)
 {

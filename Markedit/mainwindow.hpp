@@ -63,16 +63,12 @@ private slots:
     bool saveFileAs();
     /// 新建笔记
     void newNote();
-    /// 打开笔记
-    void openNote();
     /// 添加到笔记
     void addToNote();
     /// 丢弃笔记
     void deleteNote();
     /// 从笔记中移除文件
     void removeFromNote();
-    /// 显示错误笔记文件夹信息
-    void _showInvalidNote();
     /// 询问怎么处理被移除的文件
     void _whetherSave(const QStringList &files);
     /// 编辑中断询问
@@ -131,6 +127,18 @@ private slots:
     void _handleResaveAction(const QString &encoding);
     /// 从字符串加载编码类型
     QStringConverter::Encoding _stringToEncoding(const QString &name);
+
+    // “笔记”右键菜单
+    /// 右键菜单显示
+    void showNotesMenu(const QPoint &pos);
+    /// 移除文件
+    void removeSelectedFile();
+    /// 移动文件
+    void moveSelectedFile();
+    /// 重命名文件
+    void renameSelectedFile();
+    /// 另存为文件
+    void saveAsSelectedFile();
 
 protected:
     void closeEvent(QCloseEvent *event) override;

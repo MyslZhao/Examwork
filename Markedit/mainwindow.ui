@@ -1,184 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>MainWindow</class>
-    <widget class="QMainWindow" name="MainWindow">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>800</width>
-                <height>600</height>
-            </rect>
-        </property>
-        <property name="windowTitle">
-            <string>Markedit</string>
-        </property>
-        <widget class="QWidget" name="centralwidget">
-            <layout class="QGridLayout" name="gridLayout">
-                <item row="0" column="0">
-                    <widget class="QWidget" name="centralPlaceholder" native="true">
-                        <layout class="QHBoxLayout" name="horizontalLayout">
-                            <item>
-                                <widget class="QPlainTextEdit" name="markdownEdit" />
-                            </item>
-                            <item>
-                                <widget class="QTextBrowser" name="previewBrowser" />
-                            </item>
-                        </layout>
-                    </widget>
-                </item>
-            </layout>
-        </widget>
-        <widget class="QMenuBar" name="menubar">
-            <property name="geometry">
-                <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>800</width>
-                    <height>24</height>
-                </rect>
-            </property>
-            <widget class="QMenu" name="menu_file">
-                <property name="title">
-                    <string>文件(&amp;F)</string>
-                </property>
-                <addaction name="action_new" />
-                <addaction name="action_open" />
-                <addaction name="action_save" />
-                <addaction name="action_saveas" />
-                <addaction name="separator" />
-                <addaction name="action_mkdir" />
-                <addaction name="action_ls" />
-                <addaction name="action_cp" />
-                <addaction name="action_rmdir" />
-                <addaction name="action_mov" />
-                <addaction name="separator" />
-                <addaction name="action_exit" />
-            </widget>
-            <widget class="QMenu" name="menu_edit">
-                <property name="title">
-                    <string>编辑(&amp;E)</string>
-                </property>
-                <addaction name="action_undo" />
-                <addaction name="action_redo" />
-                <addaction name="separator" />
-                <addaction name="action_find" />
-                <addaction name="action_replace" />
-            </widget>
-            <widget class="QMenu" name="menu_help">
-                <property name="title">
-                    <string>帮助(&amp;H)</string>
-                </property>
-                <addaction name="action_guideline" />
-                <addaction name="seperator" />
-                <addaction name="action_docs" />
-                <addaction name="action_license" />
-                <addaction name="action_report" />
-                <addaction name="seperator" />
-                <addaction name="action_about" />
-            </widget>
-            <addaction name="menu_file" />
-            <addaction name="menu_edit" />
-            <addaction name="menu_help" />
-        </widget>
-        <widget class="QStatusBar" name="statusbar" />
-        <action name="action_new">
-            <property name="text">
-                <string>新建文件(&amp;N)</string>
-            </property>
-        </action>
-        <action name="action_open">
-            <property name="text">
-                <string>打开文件(&amp;O)</string>
-            </property>
-        </action>
-        <action name="action_save">
-            <property name="text">
-                <string>保存(&amp;S)</string>
-            </property>
-        </action>
-        <action name="action_saveas">
-            <property name="text">
-                <string>另存为(&amp;A)</string>
-            </property>
-        </action>
-        <action name="action_undo">
-            <property name="text">
-                <string>撤销(&amp;Z)</string>
-            </property>
-        </action>
-        <action name="action_redo">
-            <property name="text">
-                <string>重做(&amp;Y)</string>
-            </property>
-        </action>
-        <action name="action_find">
-            <property name="text">
-                <string>查找(&amp;F)</string>
-            </property>
-        </action>
-        <action name="action_replace">
-            <property name="text">
-                <string>替换(&amp;R)</string>
-            </property>
-        </action>
-        <action name="action_mkdir">
-            <property name="text">
-                <string>新建笔记(&amp;M)</string>
-            </property>
-        </action>
-        <action name="action_ls">
-            <property name="text">
-                <string>打开笔记(&amp;L)</string>
-            </property>
-        </action>
-        <action name="action_cp">
-            <property name="text">
-                <string>添加到笔记...(&amp;C)</string>
-            </property>
-        </action>
-        <action name="action_mov">
-            <property name="text">
-                <string>从笔记移除...(&amp;F)</string>
-            </property>
-        </action>
-        <action name="action_rmdir">
-            <property name="text">
-                <string>丢弃笔记(&amp;D)</string>
-            </property>
-        </action>
-        <action name="action_exit">
-            <property name="text">
-                <string>退出(&amp;X)</string>
-            </property>
-        </action>
-
-        <action name="action_guideline">
-            <property name="text">
-                <string>Markdown教程(&amp;G)</string>
-            </property>
-        </action>
-        <action name="action_docs">
-            <property name="text">
-                <string>文档(&amp;D)</string>
-            </property>
-        </action>
-        <action name="action_license">
-            <property name="text">
-                <string>许可证(&amp;L)</string>
-            </property>
-        </action>
-        <action name="action_report">
-            <property name="text">
-                <string>报告问题(&amp;R)</string>
-            </property>
-        </action>
-        <action name="action_about">
-            <property name="text">
-                <string>关于(&amp;A)</string>
-            </property>
-        </action>
-    </widget>
-    <resources />
-    <connections />
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Markedit</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QWidget" name="centralPlaceholder" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="markdownEdit"/>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="previewBrowser"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <addaction name="action_new"/>
+    <addaction name="action_open"/>
+    <addaction name="action_save"/>
+    <addaction name="action_saveas"/>
+    <addaction name="separator"/>
+    <addaction name="action_mkdir"/>
+    <addaction name="action_cp"/>
+    <addaction name="action_rmdir"/>
+    <addaction name="action_mov"/>
+    <addaction name="separator"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_edit">
+    <property name="title">
+     <string>编辑(&amp;E)</string>
+    </property>
+    <addaction name="action_undo"/>
+    <addaction name="action_redo"/>
+    <addaction name="separator"/>
+    <addaction name="action_find"/>
+    <addaction name="action_replace"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>帮助(&amp;H)</string>
+    </property>
+    <addaction name="action_guideline"/>
+    <addaction name="action_docs"/>
+    <addaction name="action_license"/>
+    <addaction name="action_report"/>
+    <addaction name="action_about"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_edit"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_new">
+   <property name="text">
+    <string>新建文件(&amp;N)</string>
+   </property>
+  </action>
+  <action name="action_open">
+   <property name="text">
+    <string>打开文件(&amp;O)</string>
+   </property>
+  </action>
+  <action name="action_save">
+   <property name="text">
+    <string>保存(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_saveas">
+   <property name="text">
+    <string>另存为(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_undo">
+   <property name="text">
+    <string>撤销(&amp;Z)</string>
+   </property>
+  </action>
+  <action name="action_redo">
+   <property name="text">
+    <string>重做(&amp;Y)</string>
+   </property>
+  </action>
+  <action name="action_find">
+   <property name="text">
+    <string>查找(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_replace">
+   <property name="text">
+    <string>替换(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_mkdir">
+   <property name="text">
+    <string>新建笔记(&amp;M)</string>
+   </property>
+  </action>
+  <action name="action_ls">
+   <property name="text">
+    <string>打开笔记(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_cp">
+   <property name="text">
+    <string>添加到笔记...(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_mov">
+   <property name="text">
+    <string>从笔记移除...(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_rmdir">
+   <property name="text">
+    <string>丢弃笔记(&amp;D)</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>退出(&amp;X)</string>
+   </property>
+  </action>
+  <action name="action_guideline">
+   <property name="text">
+    <string>Markdown教程(&amp;G)</string>
+   </property>
+  </action>
+  <action name="action_docs">
+   <property name="text">
+    <string>文档(&amp;D)</string>
+   </property>
+  </action>
+  <action name="action_license">
+   <property name="text">
+    <string>许可证(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_report">
+   <property name="text">
+    <string>报告问题(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="text">
+    <string>关于(&amp;A)</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
 </ui>

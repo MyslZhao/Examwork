@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
     side_stack = new QStackedWidget(side_dock);
     side_dock -> setWidget(side_stack);
 
-    // "大纲"功能按钮
+    // "大纲"功能按钮及侧边显示
     outline_action = activity_bar -> addAction("大纲");
     outline_action -> setCheckable(true);
     outline_action -> setChecked(false);
@@ -106,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     side_stack -> addWidget(outline_tree);
 
-    // "笔记"功能按钮
+    // "笔记"功能按钮及侧边显示
     notes_action = activity_bar -> addAction("笔记");
     notes_action -> setCheckable(true);
     notes_action -> setChecked(false);
@@ -125,6 +125,7 @@ MainWindow::MainWindow(QWidget *parent)
     notes_tree -> hideColumn(2);
     notes_tree -> hideColumn(3);
     notes_tree -> setRootIndex(_notes_system -> index(_notes_path));
+    notes_tree -> setContextMenuPolicy(Qt::CustomContextMenu);
 
     QWidget *note_page = new QWidget;
     QVBoxLayout *notes_layout = new QVBoxLayout(note_page);
@@ -165,7 +166,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui -> action_save, &QAction::triggered, this, &MainWindow::saveFile);
     connect(ui -> action_saveas, &QAction::triggered, this, &MainWindow::saveFileAs);
     connect(ui -> action_mkdir, &QAction::triggered, this, &MainWindow::newNote);
-    connect(ui -> action_ls, &QAction::triggered, this, &MainWindow::openNote);
     connect(ui -> action_cp, &QAction::triggered, this, &MainWindow::addToNote);
     connect(ui -> action_rmdir, &QAction::triggered, this, &MainWindow::deleteNote);
     connect(ui -> action_mov, &QAction::triggered, this, &MainWindow::removeFromNote);
@@ -194,12 +194,12 @@ MainWindow::MainWindow(QWidget *parent)
     );
 
     // “笔记”功能连接
-    connect(notes_action, &QAction::toggled, this, [this](bool checked)
+    connect(notes_action, &QAction::toggled, this, [this, note_page](bool checked)
         {
             if (checked)
             {
                 outline_action -> setChecked(false);
-                side_stack -> setCurrentWidget(notes_tree);
+                side_stack -> setCurrentWidget(note_page);
                 side_dock -> show();
             }
             else
@@ -223,11 +223,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui -> markdownEdit, &QPlainTextEdit::textChanged,
             this, &MainWindow::_updateOutline);
 
+    // 侧边窗口点击事件
     connect(outline_tree, &QTreeView::clicked,
             this, &MainWindow::onOutlineItemClicked);
 
     connect(notes_tree, &QTreeView::clicked,
             this, &MainWindow::onNoteTreeClicked);
+
+    // 右键事件
+    connect(notes_tree,
+            &QTreeView::customContextMenuRequested,
+            this, &MainWindow::showNotesMenu);
 
     // 编码按钮连接
     connect(encoding_btn, &QPushButton::clicked, this, &MainWindow::onEncodingBtnClicked);

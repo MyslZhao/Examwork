@@ -46,6 +46,9 @@ public:
     ~MainWindow();
 
 private slots:
+    // NOTE: 部分本不属于slots的方法也会放在此块内
+    //      方便同一管理各个部分的功能
+
     // 主窗口槽事件
     /// 预览渲染
     void _updatePreview();
@@ -110,6 +113,16 @@ private slots:
     /// “笔记”按钮触发事件
     void onNoteTreeClicked(const QModelIndex &index);
 
+    // 侧边栏"Settings"相关事件
+    /// 显示设置窗口
+    void showSettingsDialog();
+    /// 加载设置
+    void _loadSettings();
+    /// 应用设置
+    void _applyFontSettings(const QFont &font);
+    /// 保存设置
+    void _saveSettings(const QFont &font);
+
     // 状态栏
     /// 更新光标位置信息
     void _updateCursorPos();
@@ -163,6 +176,8 @@ private:
     QAction *outline_action;
     /// 笔记按钮事件
     QAction *notes_action;
+    /// 设置按钮事件
+    QAction *settings_action;
 
     // 可堆叠面板
     /// 大纲面板

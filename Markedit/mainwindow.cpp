@@ -20,6 +20,8 @@
 #include <QDockWidget>
 #include <QScrollBar>
 #include <QTreeView>
+#include <QDesktopServices>
+#include <QMessageBox>
 // -*- encoding: utf-8 -*-
 
 const QHash<QString, QStringConverter::Encoding> MainWindow::ENCOMAP = {
@@ -142,6 +144,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     side_stack -> addWidget(note_page);
 
+    // "设置"功能按钮
+    settings_action = activity_bar -> addAction("设置");
+    settings_action -> setCheckable(false);
+
     // 状态栏
     QStatusBar *status = statusBar();
 
@@ -176,6 +182,36 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui -> action_redo, &QAction::triggered, ui -> markdownEdit, &QPlainTextEdit::redo);
     connect(ui -> action_find, &QAction::triggered, this, &MainWindow::showFindDialog);
     connect(ui -> action_replace, &QAction::triggered, this, &MainWindow::showReplaceDialog);
+
+    // "帮助"菜单连接
+    connect(ui -> action_guideline, &QAction::triggered, []()
+        {
+            QDesktopServices::openUrl(QUrl("https://markdown.com.cn/basic-syntax/"));
+        }
+    );
+    connect(ui -> action_docs, &QAction::triggered, []()
+        {
+        QDesktopServices::openUrl(QUrl("https://github.com/MyslZhao/Examwork/blob/main/README.md"));
+        }
+    );
+    connect(ui -> action_license, &QAction::triggered, []()
+        {
+            QDesktopServices::openUrl(QUrl("https://github.com/MyslZhao/Examwork/blob/main/LICENSE.md"));
+        }
+    );
+    connect(ui -> action_report, &QAction::triggered, []()
+        {
+            QDesktopServices::openUrl(QUrl("https://github.com/MyslZhao/Examwork/issues"));
+        }
+    );
+    connect(ui->action_about, &QAction::triggered, [this]() {
+        QString aboutText = "<h2>Markedit</h2>"
+                            "<p>版本 0.1</p>"
+                            "<p>一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。</p>"
+                            "<p>项目主页：<a href='https://github.com/yourusername/yourrepo'>GitHub</a></p>"
+                            "<p>Copyright © 2026 MyslZhao</p>";
+        QMessageBox::about(this, "关于 Markedit", aboutText);
+    });
 
     // “大纲”功能连接
     connect(outline_action, &QAction::toggled, this, [this](bool checked)
@@ -223,12 +259,30 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui -> markdownEdit, &QPlainTextEdit::textChanged,
             this, &MainWindow::_updateOutline);
 
+    // 光标行高亮事件
+    // HACK: 暂时先用lambda函数，后续会考虑新建一个时间槽
+    connect(ui->markdownEdit, &QPlainTextEdit::cursorPositionChanged, this, [this](){
+        QList<QTextEdit::ExtraSelection> extraSelections;
+        if (!ui->markdownEdit->isReadOnly()) {
+            QTextEdit::ExtraSelection selection;
+            selection.format.setBackground(QColor(0x4C, 0x4C, 0x4C));
+            selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+            selection.cursor = ui->markdownEdit->textCursor();
+            selection.cursor.clearSelection();
+            extraSelections.append(selection);
+        }
+        ui->markdownEdit->setExtraSelections(extraSelections);
+    });
+
     // 侧边窗口点击事件
     connect(outline_tree, &QTreeView::clicked,
             this, &MainWindow::onOutlineItemClicked);
 
     connect(notes_tree, &QTreeView::clicked,
             this, &MainWindow::onNoteTreeClicked);
+
+    connect(settings_action, &QAction::triggered,
+            this, &MainWindow::showSettingsDialog);
 
     // 右键事件
     connect(notes_tree,

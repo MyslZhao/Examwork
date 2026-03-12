@@ -23,6 +23,7 @@ set(PROJECT_SOURCES
     barOutlineHandle.cpp
     statusBarHandle.cpp
     barNotesHandle.cpp
+    barSettingsHandle.cpp
     # Markedit_zh_CN.ts
 )
 

@@ -7,8 +7,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS LinguistTools Widgets)
+
+qt_standard_project_setup(
+    I18N_TRANSLATED_LANGUAGES zh_CN en_US # 替换为你需要的语言
+)
 
 # 项目源文件
 set(PROJECT_SOURCES
@@ -24,7 +28,6 @@ set(PROJECT_SOURCES
     statusBarHandle.cpp
     barNotesHandle.cpp
     barSettingsHandle.cpp
-    # Markedit_zh_CN.ts
 )
 
 add_executable(Markedit ${PROJECT_SOURCES}
@@ -44,4 +47,11 @@ install(TARGETS Markedit
     BUNDLE DESTINATION .
 )
 
+qt_add_translations(Markedit
+    TS_FILES
+        translations/zh_CN.ts
+        translations/en_US.ts
+)
+
 include(CPack)
+

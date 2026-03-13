@@ -22,20 +22,20 @@
 void MainWindow::showSettingsDialog()
 {
     QDialog dialog(this);
-    dialog.setWindowTitle("设置");
+    dialog.setWindowTitle(QObject::tr("设置"));
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QFontComboBox *font_combo = new QFontComboBox;
     font_combo -> setCurrentFont(ui -> markdownEdit -> font());
-    layout -> addWidget(new QLabel("字体:"));
+    layout -> addWidget(new QLabel(QObject::tr("字体:")));
     layout -> addWidget(font_combo);
 
     QSpinBox *size_spin = new QSpinBox;
     size_spin -> setRange(6, 72);
     size_spin -> setValue(ui -> markdownEdit -> font().pointSize());
 
-    layout -> addWidget(new QLabel("字号:"));
+    layout -> addWidget(new QLabel(QObject::tr("字号:")));
     layout -> addWidget(size_spin);
 
     QDialogButtonBox *btn_box = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

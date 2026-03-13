@@ -63,12 +63,14 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(splitter);
     splitter -> setSizes({400, 200});
 
-    ui -> previewBrowser -> setHtml("<h2 style = 'color: #545555'>"
-                                "Preview Area"
-                                "</h2>"
-                                "<p style = 'color: #656565'>"
-                                "Start writing Markdown on the left..."
-                                "</p>");
+    ui -> previewBrowser -> setHtml(QObject::tr(
+                                 "<h2 style = 'color: #545555'>"
+                                 "预览区域"
+                                 "</h2>"
+                                 "<p style = 'color: #656565'>"
+                                 "在左边开始写Markdown代码"
+                                 "</p>"
+        ));
 
     // 侧边栏部分
     activity_dock = new QDockWidget(this);
@@ -134,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent)
     notes_layout -> setContentsMargins(0, 5, 0, 0);
     notes_layout -> setSpacing(2);
 
-    _note_name = new QLabel("当前未打开笔记");
+    _note_name = new QLabel(QObject::tr("当前未打开笔记"));
     _note_name -> setAlignment(Qt::AlignCenter);
     _note_name -> setStyleSheet("font-weight: bold; color: #888;");
 
@@ -152,7 +154,7 @@ MainWindow::MainWindow(QWidget *parent)
     QStatusBar *status = statusBar();
 
     cursor_pos = new QLabel(this);
-    cursor_pos -> setText("行 1, 列 1   ");
+    cursor_pos -> setText(QObject::tr("行 1, 列 1   "));
     status -> addPermanentWidget(cursor_pos);
 
     encoding_btn = new QPushButton("UTF-8", this);
@@ -205,12 +207,14 @@ MainWindow::MainWindow(QWidget *parent)
         }
     );
     connect(ui->action_about, &QAction::triggered, [this]() {
-        QString aboutText = "<h2>Markedit</h2>"
-                            "<p>版本 0.1</p>"
-                            "<p>一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。</p>"
-                            "<p>项目主页：<a href='https://github.com/yourusername/yourrepo'>GitHub</a></p>"
-                            "<p>Copyright © 2026 MyslZhao</p>";
-        QMessageBox::about(this, "关于 Markedit", aboutText);
+        QString aboutText = QObject::tr(
+                             "<h2>Markedit</h2>"
+                             "<p>版本 0.1</p>"
+                             "<p>一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。</p>"
+                             "<p>项目主页：<a href='https://github.com/yourusername/yourrepo'>GitHub</a></p>"
+                             "<p>Copyright © 2026 MyslZhao</p>"
+                                        );
+        QMessageBox::about(this, QObject::tr("关于 Markedit"), aboutText);
     });
 
     // “大纲”功能连接
@@ -260,7 +264,6 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::_updateOutline);
 
     // 光标行高亮事件
-    // HACK: 暂时先用lambda函数，后续会考虑新建一个时间槽
     connect(ui->markdownEdit, &QPlainTextEdit::cursorPositionChanged, this, [this](){
         QList<QTextEdit::ExtraSelection> extraSelections;
         if (!ui->markdownEdit->isReadOnly()) {
@@ -312,9 +315,11 @@ void MainWindow::_updatePreview()
 {
     QString markdown_text = ui -> markdownEdit -> toPlainText();
     if (markdown_text.isEmpty()) {
-        ui -> previewBrowser -> setHtml("<p style = 'color: #656565'>"
-                                    "<i>Nothing to preview...</i>"
-                                    "</p>");
+        ui -> previewBrowser -> setHtml(QObject::tr(
+            "<p style = 'color: #656565'>"
+             "<i>没有文本可以预览...</i>"
+             "</p>"
+            ));
         return;
     }
 

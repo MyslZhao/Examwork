@@ -43,7 +43,7 @@ void MainWindow::openFile()
     if (_maybeSave())
     {
         QString file_name = QFileDialog::getOpenFileName(this,
-                                                        "打开Markdown源码文件",
+                                                        QObject::tr("打开Markdown源码文件"),
                                                         QString(),
                                                         "Markdown files (*.md);;All files (*.*)"
                                                         );
@@ -77,8 +77,8 @@ bool MainWindow::saveFile()
 bool MainWindow::saveFileAs()
 {
     QString file_name = QFileDialog::getSaveFileName(this,
-                                                     "另存为",
-                                                    _current_path.isEmpty() ? "未命名.md" : _current_path,
+                                                     QObject::tr("另存为"),
+                                                     _current_path.isEmpty() ? "未命名.md" : _current_path,
                                                     "Markdown files (*.md *.txt);;All files (*.*)"
                                                      );
     if (file_name.isEmpty())
@@ -94,8 +94,8 @@ void MainWindow::newNote()
 {
     bool pass;
     QString note_name = QInputDialog::getText(this,
-                                              "新建笔记",
-                                              "输入笔记名字:",
+                                              QObject::tr("新建笔记"),
+                                              QObject::tr("输入笔记名字:"),
                                               QLineEdit::Normal,
                                               "",
                                               &pass
@@ -111,8 +111,8 @@ void MainWindow::newNote()
     if (!dir.mkpath(note_path))
     {
         QMessageBox::warning(this,
-                             "错误",
-                             "无法新建笔记"
+                             QObject::tr("错误"),
+                             QObject::tr("无法新建笔记")
                              );
         return;
     }
@@ -141,8 +141,8 @@ void MainWindow::addToNote()
     if(_current_note_path.isEmpty())
     {
         QMessageBox::information(this,
-                                 "提示",
-                                 "请先在侧边栏选择一个笔记。"
+                                 QObject::tr("提示"),
+                                 QObject::tr("请先在侧边栏选择一个笔记。")
                                  );
         return;
     }
@@ -165,15 +165,15 @@ void MainWindow::addToNote()
         if (_saveTo(target_path))
         {
             QMessageBox::information(this,
-                                     "成功",
-                                     "文件以保存到笔记。"
+                                     QObject::tr("成功"),
+                                     QObject::tr("文件以保存到笔记。")
                                      );
         }
         else
         {
             QMessageBox::warning(this,
-                                 "错误",
-                                 "保存失败。"
+                                 QObject::tr("错误"),
+                                 QObject::tr("保存失败。")
                                  );
         }
         return;
@@ -185,8 +185,8 @@ void MainWindow::addToNote()
     if (QFileInfo(_current_path).absolutePath() == _current_note_path)
     {
         QMessageBox::information(this,
-                                 "提示 ",
-                                 "文件以存在于该笔记中。"
+                                 QObject::tr("提示 "),
+                                 QObject::tr("文件以存在于该笔记中。")
                                  );
         return;
     }
@@ -194,8 +194,8 @@ void MainWindow::addToNote()
     if (QFile::exists(target_path))
     {
         int ret = QMessageBox::question(this,
-                                        "文件已存在",
-                                        "该笔记中已存在同名文件，是否覆盖？",
+                                        QObject::tr("文件已存在"),
+                                        QObject::tr("该笔记中已存在同名文件，是否覆盖？"),
                                         QMessageBox::Yes | QMessageBox::No
                                         );
 
@@ -211,15 +211,15 @@ void MainWindow::addToNote()
     if (QFile::copy(_current_path, target_path))
     {
         QMessageBox::information(this,
-                                 "成功",
-                                 "成功添加文件到笔记"
+                                 QObject::tr("成功"),
+                                 QObject::tr("成功添加文件到笔记")
                                  );
     }
     else
     {
         QMessageBox::warning(this,
-                             "错误",
-                             "添加失败"
+                             QObject::tr("错误"),
+                             QObject::tr("添加失败")
                              );
     }
 }
@@ -232,8 +232,8 @@ void MainWindow::deleteNote()
     if (_current_note_path.isEmpty())
     {
         QMessageBox::information(this,
-                                 "提示",
-                                 "亲在侧边栏打开一个笔记。"
+                                 QObject::tr("提示"),
+                                 QObject::tr("请在侧边栏打开一个笔记。")
                                  );
         return;
     }
@@ -242,8 +242,8 @@ void MainWindow::deleteNote()
     QFileInfo info(path);
 
     int ret = QMessageBox::question(this,
-                                    "确认丢弃",
-                                    QString("确定要丢弃笔记 \"%1\" 吗？之后将无法找回。")
+                                    QObject::tr("确认丢弃"),
+                                    QString(QObject::tr("确定要丢弃笔记 \"%1\" 吗？之后将无法找回。"))
                                     .arg(info.fileName()),
                                     QMessageBox::Yes | QMessageBox::No
                                     );
@@ -256,19 +256,19 @@ void MainWindow::deleteNote()
     if (dir.removeRecursively())
     {
         QMessageBox::information(this,
-                                 "成功",
-                                 "笔记已删除。"
+                                 QObject::tr("成功"),
+                                 QObject::tr("笔记已删除。")
                                  );
         _current_note_path.clear();
-        _note_name -> setText("未打开笔记");
+        _note_name -> setText(QObject::tr("未打开笔记"));
 
         notes_tree -> setRootIndex(_notes_system -> index(_notes_path));
     }
     else
     {
         QMessageBox::warning(this,
-                             "错误",
-                             "删除失败，请检查该笔记文件夹是否被其他程序占用。"
+                             QObject::tr("错误"),
+                             QObject::tr("删除失败，请检查该笔记文件夹是否被其他程序占用。")
                              );
     }
 }
@@ -281,16 +281,16 @@ void MainWindow::removeFromNote()
     if (_current_note_path.isEmpty())
     {
         QMessageBox::information(this,
-                                 "提示",
-                                 "请先打开笔记"
+                                 QObject::tr("提示"),
+                                 QObject::tr("请先打开笔记")
                                  );
         return;
     }
 
     QStringList files = QFileDialog::getOpenFileNames(this,
-                                                      "选择要移除的文件",
+                                                      QObject::tr("选择要移除的文件"),
                                                       _current_note_path,
-                                                      "Markdown文件 (*.md)"
+                                                      "Markdown file (*.md)"
                                                       );
     if (files.isEmpty())
     {
@@ -306,12 +306,12 @@ void MainWindow::removeFromNote()
 void MainWindow::_whetherSave(const QStringList &files)
 {
     QMessageBox quirey(this);
-    quirey.setWindowTitle("移除文件");
-    quirey.setText("选择被移除文件的处理方式:");
+    quirey.setWindowTitle(QObject::tr("移除文件"));
+    quirey.setText(QObject::tr("选择被移除文件的处理方式:");
 
-    QPushButton *delete_btn = quirey.addButton("直接删除", QMessageBox::DestructiveRole);
-    QPushButton *presave_btn = quirey.addButton("另存为后删除", QMessageBox::ActionRole);
-    QPushButton *cancel_btn = quirey.addButton("取消", QMessageBox::RejectRole);
+    QPushButton *delete_btn = quirey.addButton(QObject::tr("直接删除"), QMessageBox::DestructiveRole);
+    QPushButton *presave_btn = quirey.addButton(QObject::tr("另存为后删除"), QMessageBox::ActionRole);
+    QPushButton *cancel_btn = quirey.addButton(QObject::tr("取消"), QMessageBox::RejectRole);
     auto result = quirey.exec();
 
     if (result == QDialog::Rejected || quirey.clickedButton() == cancel_btn)
@@ -323,7 +323,7 @@ void MainWindow::_whetherSave(const QStringList &files)
     QString save_dir;
     if (need_save)
     {
-        save_dir = QFileDialog::getExistingDirectory(this, "选择保存位置", QDir::homePath());
+        save_dir = QFileDialog::getExistingDirectory(this, QObject::tr("选择保存位置"), QDir::homePath());
         if (save_dir.isEmpty())
         {
             return;
@@ -340,8 +340,8 @@ void MainWindow::_whetherSave(const QStringList &files)
             if (QFile::exists(target_path))
             {
                 int ret = QMessageBox::question(this,
-                                                "文件已存在",
-                                                QString("文件 \"%1\" 已存在，是否覆盖？")
+                                                QObject::tr("文件已存在"),
+                                                QString(QObject::tr("文件 \"%1\" 已存在，是否覆盖？"))
                                                     .arg(info.fileName()),
                                                 QMessageBox::Yes | QMessageBox::No
                                                 );
@@ -354,8 +354,8 @@ void MainWindow::_whetherSave(const QStringList &files)
                 if (!QFile::copy(file_path, temp_path))
                 {
                     QMessageBox::warning(this,
-                                         "保存失败",
-                                         QString("文件 \"%1\" 移动失败。")
+                                         QObject::tr("保存失败"),
+                                         QString(QObject::tr("文件 \"%1\" 移动失败。"))
                                              .arg(info.fileName())
                                          );
                     continue;
@@ -364,8 +364,8 @@ void MainWindow::_whetherSave(const QStringList &files)
                 if (QFile::exists(target_path) && !QFile::remove(target_path))
                 {
                     QMessageBox::warning(this,
-                                         "同名冲突",
-                                         "存在同名文件"
+                                         QObject::tr("同名冲突"),
+                                         QObject::tr("存在同名文件")
                                          );
                     QFile::remove(temp_path);
                     continue;
@@ -374,8 +374,8 @@ void MainWindow::_whetherSave(const QStringList &files)
                 if (!QFile::rename(temp_path, target_path))
                 {
                     QMessageBox::warning(this,
-                                         "同名冲突",
-                                         "存在同名文件"
+                                         QObject::tr("同名冲突"),
+                                         QObject::tr("存在同名文件")
                                          );
                     QFile::remove(temp_path);
                     continue;
@@ -386,8 +386,8 @@ void MainWindow::_whetherSave(const QStringList &files)
                 if (!QFile::copy(file_path, target_path))
                 {
                     QMessageBox::warning(this,
-                                         "错误",
-                                         QString("无法复制文件 \"%1\" 到目标位置。")
+                                         QObject::tr("错误"),
+                                         QString(QObject::tr("无法复制文件 \"%1\" 到目标位置。"))
                                              .arg(info.fileName())
                                          );
                     continue;
@@ -399,8 +399,8 @@ void MainWindow::_whetherSave(const QStringList &files)
         if (!file.remove())
         {
             QMessageBox::warning(this,
-                                 "错误",
-                                 QString("无法删除文件。")
+                                 QObject::tr("错误"),
+                                 QString(QObject::tr("无法删除文件。"))
                                     .arg(info.fileName())
                                  );
         }
@@ -411,8 +411,8 @@ void MainWindow::_whetherSave(const QStringList &files)
     }
 
     QMessageBox::information(this,
-                             "完成",
-                             QString("成功移除 %1 个文件。")
+                             QObject::tr("完成"),
+                             QString(QObject::tr("成功移除 %1 个文件。"))
                                 .arg(amount)
                              );
 }
@@ -428,8 +428,8 @@ bool MainWindow::_saveTo(const QString &file_name)
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QMessageBox::warning(this,
-                             "错误",
-                             "无法保存文件: " + file.errorString()
+                             QObject::tr("错误"),
+                             QObject::tr("无法保存文件: ") + file.errorString()
                              );
         return false;
     }
@@ -442,7 +442,7 @@ bool MainWindow::_saveTo(const QString &file_name)
     ui -> markdownEdit -> document() -> setModified(false);
     _is_untitled = false;
     _setCurrentFileName(file_name);
-    statusBar()->showMessage("文件已保存", 2000);
+    statusBar()->showMessage(QObject::tr("文件已保存"), 2000);
     return true;
 }
 
@@ -456,8 +456,8 @@ bool MainWindow::_maybeSave()
     {
         QMessageBox::StandardButton query;
         query = QMessageBox::warning(this,
-                                     "Markedit",
-                                   "是否保存已被修改的文件？",
+                                     QObject::tr("提示"),
+                                   QObject::tr("是否保存已被修改的文件？"),
                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel
                                      );
         if (query == QMessageBox::Save)
@@ -482,8 +482,8 @@ void MainWindow::_loadFile(const QString &file_name)
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QMessageBox::warning(this,
-                             "错误",
-                             "该文件无法编辑: " + file.errorString()
+                             QObject::tr("错误"),
+                             QObject::tr("该文件无法编辑: ") + file.errorString()
                              );
         return;
     }
@@ -497,7 +497,7 @@ void MainWindow::_loadFile(const QString &file_name)
     ui -> markdownEdit -> document() -> setModified(false);
     _is_untitled = false;
     _setCurrentFileName(file_name);
-    statusBar()->showMessage("文件加载完毕", 2000);
+    statusBar()->showMessage(QObject::tr("文件加载完毕"), 2000);
 }
 
 /**

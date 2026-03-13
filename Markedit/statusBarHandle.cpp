@@ -28,7 +28,7 @@ void MainWindow::_updateCursorPos()
     QTextCursor cursor = ui -> markdownEdit -> textCursor();
     int line = cursor.blockNumber() + 1;
     int col = cursor.columnNumber() + 1;
-    cursor_pos -> setText(QString("行 %1, 列 %2   ").arg(line).arg(col));
+    cursor_pos -> setText(QString(QObject::tr("行 %1, 列 %2   ")).arg(line).arg(col));
 }
 
 /**
@@ -39,15 +39,15 @@ void MainWindow::_updateCursorPos()
 bool MainWindow::_showEncodingOpe(bool &pass_status)
 {
     QDialog dialog(this);
-    dialog.setWindowTitle("更改文件编码");
+    dialog.setWindowTitle(QObject::tr("更改文件编码"));
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
-    QLabel *label = new QLabel("选择执行......");
+    QLabel *label = new QLabel(QObject::tr("选择执行......"));
     layout -> addWidget(label);
 
-    QRadioButton *reopen_with = new QRadioButton("以......编码重新打开");
-    QRadioButton *save_with = new QRadioButton("以......编码保存");
+    QRadioButton *reopen_with = new QRadioButton(QObject::tr("以......编码重新打开"));
+    QRadioButton *save_with = new QRadioButton(QObject::tr("以......编码保存"));
     reopen_with -> setChecked(true);
 
     layout -> addWidget(reopen_with);
@@ -80,7 +80,7 @@ QString MainWindow::_showEncodingType(bool &pass_status)
 {
     QStringList encodings = {"UTF-8", "UTF-16", "ISO-8859-1", "ASCII"};
     pass_status = false;
-    QString encoding = QInputDialog::getItem(this, "选择编码", "编码:", encodings, 0, false, &pass_status);
+    QString encoding = QInputDialog::getItem(this, QObject::tr("选择编码"), QObject::tr("编码:"), encodings, 0, false, &pass_status);
 
     if (pass_status)
     {
@@ -132,13 +132,13 @@ void MainWindow::_handleReopenAction(const QString &encoding)
 {
     if (_current_path.isEmpty())
     {
-        QMessageBox::warning(this, "提示", "未打开文件。");
+        QMessageBox::warning(this, QObject::tr("提示"), QObject::tr("未打开文件。"));
         return;
     }
     QFile file(_current_path);
     if (!file.open(QIODevice::ReadOnly))
     {
-        QMessageBox::warning(this, "错误", "文件无法打开:" + file.errorString());
+        QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("文件无法打开:") + file.errorString());
         return;
     }
 
@@ -164,7 +164,7 @@ void MainWindow::_handleResaveAction(const QString &encoding)
 {
     if (_current_path.isEmpty())
     {
-        QString file_name = QFileDialog::getSaveFileName(this, "保存文件", QString(), "所有文件 (*.*)");
+        QString file_name = QFileDialog::getSaveFileName(this, QObject::tr("保存文件"), QString(), "All file (*.*)");
         if (file_name.isEmpty())
         {
             return;
@@ -174,7 +174,7 @@ void MainWindow::_handleResaveAction(const QString &encoding)
     QFile file(_current_path);
     if (!file.open(QIODevice::WriteOnly))
     {
-        QMessageBox::warning(this, "错误", "文件无法更改:" + file.errorString());
+        QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("文件无法更改:") + file.errorString());
         return;
     }
     QTextStream stream(&file);

@@ -67,19 +67,19 @@ void MainWindow::showFindDialog()
     }
 
     QDialog dialog(this);
-    dialog.setWindowTitle("查找");
+    dialog.setWindowTitle(QObject::tr("查找"));
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QLineEdit *find_edit = new QLineEdit;
-    QCheckBox *case_check = new QCheckBox("大小写区分");
-    QCheckBox *whole_check = new QCheckBox("全词匹配");
-    QCheckBox *regex_check = new QCheckBox("RegEx模式");
+    QCheckBox *case_check = new QCheckBox(QObject::tr("大小写区分"));
+    QCheckBox *whole_check = new QCheckBox(QObject::tr("全词匹配"));
+    QCheckBox *regex_check = new QCheckBox(QObject::tr("RegEx模式"));
 
     QDialogButtonBox *btn_box = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                        QDialogButtonBox::Cancel);
 
-    layout -> addWidget(new QLabel("查找内容(支持正则):"));
+    layout -> addWidget(new QLabel(QObject::tr("查找内容(支持正则):")));
 
     layout -> addWidget(find_edit);
     layout -> addWidget(case_check);
@@ -124,27 +124,27 @@ void MainWindow::showReplaceDialog()
     }
 
     QDialog dialog(this);
-    dialog.setWindowTitle("替换");
+    dialog.setWindowTitle(QObject::tr("替换"));
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QLineEdit *find_edit = new QLineEdit;
     QLineEdit *replace_edit = new QLineEdit;
 
-    QCheckBox *case_check = new QCheckBox("大小写区分");
-    QCheckBox *whole_check = new QCheckBox("全局匹配");
-    QCheckBox *regex_check = new QCheckBox("RegEx模式");
+    QCheckBox *case_check = new QCheckBox(QObject::tr("大小写区分"));
+    QCheckBox *whole_check = new QCheckBox(QObject::tr("全局匹配"));
+    QCheckBox *regex_check = new QCheckBox(QObject::tr("RegEx模式"));
 
     QHBoxLayout *btn_layout = new QHBoxLayout;
 
-    QPushButton *next_btn = new QPushButton("下一项");
-    QPushButton *replace_btn = new QPushButton("替换");
-    QPushButton *replacall_btn = new QPushButton("全部替换");
-    QPushButton *close_btn = new QPushButton("关闭");
+    QPushButton *next_btn = new QPushButton(QObject::tr("下一项"));
+    QPushButton *replace_btn = new QPushButton(QObject::tr("替换"));
+    QPushButton *replacall_btn = new QPushButton(QObject::tr("全部替换"));
+    QPushButton *close_btn = new QPushButton(QObject::tr("关闭"));
 
-    layout -> addWidget(new QLabel("替换内容:"));
+    layout -> addWidget(new QLabel(QObject::tr("替换内容:")));
     layout -> addWidget(find_edit);
-    layout -> addWidget(new QLabel("替换为:"));
+    layout -> addWidget(new QLabel(QObject::tr("替换为:")));
     layout -> addWidget(replace_edit);
 
     layout -> addWidget(case_check);
@@ -192,7 +192,7 @@ void MainWindow::showReplaceDialog()
  */
 void MainWindow::_showRegexError(const QString &errormsg)
 {
-    QMessageBox::warning(this, "表达式错误", "无效的RegEx: " + errormsg);
+    QMessageBox::warning(this, QObject::tr("表达式错误"), QObject::tr("无效的RegEx: ") + errormsg);
     return;
 }
 
@@ -246,7 +246,7 @@ void MainWindow::findNext(const QString &text, QTextDocument::FindFlags flags, b
 
     if (!found)
     {
-        QMessageBox::information(this, "查找", "未找到目标项");
+        QMessageBox::information(this, QObject::tr("查找"), QObject::tr("未找到目标项"));
     }
 }
 
@@ -328,5 +328,5 @@ void MainWindow::replaceAll(const QString &target_text, const QString &new_text,
     }
 
     cursor.endEditBlock();
-    QMessageBox::information(this, "全局替换", QString("共替换 %1 处").arg(counter));
+    QMessageBox::information(this, QObject::tr("全局替换"), QString(QObject::tr("共替换 %1 处")).arg(counter));
 }

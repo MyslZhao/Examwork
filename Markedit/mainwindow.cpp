@@ -22,6 +22,7 @@
 #include <QTreeView>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QSettings>
 // -*- encoding: utf-8 -*-
 
 const QHash<QString, QStringConverter::Encoding> MainWindow::ENCOMAP = {
@@ -211,7 +212,7 @@ MainWindow::MainWindow(QWidget *parent)
                              "<h2>Markedit</h2>"
                              "<p>版本 0.1</p>"
                              "<p>一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。</p>"
-                             "<p>项目主页：<a href='https://github.com/yourusername/yourrepo'>GitHub</a></p>"
+                             "<p>项目主页：<a href='https://github.com/MyslZhao/Examwork'>GitHub</a></p>"
                              "<p>Copyright © 2026 MyslZhao</p>"
                                         );
         QMessageBox::about(this, QObject::tr("关于 Markedit"), aboutText);
@@ -298,6 +299,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 初始更新大纲
     _updateOutline();
+
+    // 加载相关设置
+    _loadSettings();
+
+    QSettings settings("config.ini", QSettings::IniFormat);
+    QString lang = settings.value("language", "zh_CN").toString();
+    _switchLanguage(lang);
 }
 
 /**

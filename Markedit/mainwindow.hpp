@@ -28,6 +28,7 @@
 #include <QTreeView>
 #include <QFileSystemModel>
 #include <QStandardItemModel>
+#include <QTranslator>
 // -*- encoding: utf-8 -*-
 
 QT_BEGIN_NAMESPACE
@@ -122,6 +123,8 @@ private slots:
     void _applyFontSettings(const QFont &font);
     /// 保存设置
     void _saveSettings(const QFont &font);
+    /// 切换语言
+    void _switchLanguage(const QString &langCode);
 
     // 状态栏
     /// 更新光标位置信息
@@ -192,6 +195,8 @@ private:
     QPushButton *encoding_btn;
 
     // 其他相关变量/辅助变量
+    /// 翻译器
+    QTranslator m_translator;
     /// 编码映射表
     static const QHash<QString, QStringConverter::Encoding> ENCOMAP;
     /// 文件路径(相对路径)

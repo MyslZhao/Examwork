@@ -129,44 +129,44 @@ void MainWindow::moveSelectedFile()
     QModelIndex index = notes_tree->currentIndex();
     if (!index.isValid()) return;
 
-    QString srcPath = _notes_system->filePath(index);
-    QFileInfo srcInfo(srcPath);
-    if (!srcInfo.isFile()) return;
+    QString src_path = _notes_system->filePath(index);
+    QFileInfo src_info(src_path);
+    if (!src_info.isFile()) return;
 
-    QDir notesDir(_notes_path);
-    QStringList noteFolders = notesDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    if (noteFolders.isEmpty()) {
+    QDir notes_dir(_notes_path);
+    QStringList note_folders = notes_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    if (note_folders.isEmpty()) {
         QMessageBox::information(this, QObject::tr("提示"), QObject::tr("没有可移动的目标笔记。"));
         return;
     }
 
     bool ok;
-    QString targetNote = QInputDialog::getItem(this, QObject::tr("选择目标笔记"),
+    QString target_note = QInputDialog::getItem(this, QObject::tr("选择目标笔记"),
                                                QObject::tr("请选择要移动到的笔记:"),
-                                               noteFolders, 0, false, &ok);
+                                               note_folders, 0, false, &ok);
     if (!ok) return;
 
-    QString targetDir = _notes_path + "/" + targetNote;
-    QString targetPath = targetDir + "/" + srcInfo.fileName();
+    QString target_dir = _notes_path + "/" + target_note;
+    QString target_path = target_dir + "/" + src_info.fileName();
 
-    if (QFile::exists(targetPath)) {
+    if (QFile::exists(target_path)) {
         int ret = QMessageBox::question(this, QObject::tr("文件已存在"),
                                         QObject::tr("目标笔记中已有同名文件，是否覆盖？"),
                                         QMessageBox::Yes | QMessageBox::No);
         if (ret != QMessageBox::Yes) return;
-        QFile::remove(targetPath);
+        QFile::remove(target_path);
     }
 
-    if (srcPath == _current_path) {
-        if (QFile::rename(srcPath, targetPath)) {
-            _current_path = targetPath;
-            setWindowTitle(QFileInfo(targetPath).fileName() + "[*] - Markedit");
+    if (src_path == _current_path) {
+        if (QFile::rename(src_path, target_path)) {
+            _current_path = target_path;
+            setWindowTitle(QFileInfo(target_path).fileName() + "[*] - Markedit");
             QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已移动。"));
         } else {
             QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("移动失败。"));
         }
     } else {
-        if (!QFile::rename(srcPath, targetPath)) {
+        if (!QFile::rename(src_path, target_path)) {
             QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("移动失败。"));
         } else {
             QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已移动。"));
@@ -182,38 +182,38 @@ void MainWindow::renameSelectedFile()
     QModelIndex index = notes_tree->currentIndex();
     if (!index.isValid()) return;
 
-    QString oldPath = _notes_system->filePath(index);
-    QFileInfo oldInfo(oldPath);
-    if (!oldInfo.isFile()) return;
+    QString old_path = _notes_system->filePath(index);
+    QFileInfo old_info(old_path);
+    if (!old_info.isFile()) return;
 
     bool ok;
-    QString newName = QInputDialog::getText(this, QObject::tr("重命名文件"),
+    QString new_name = QInputDialog::getText(this, QObject::tr("重命名文件"),
                                             QObject::tr("输入新文件名（保留 .md 后缀）:"),
                                             QLineEdit::Normal,
-                                            oldInfo.fileName(), &ok);
-    if (!ok || newName.isEmpty()) return;
+                                            old_info.fileName(), &ok);
+    if (!ok || new_name.isEmpty()) return;
 
-    if (!newName.endsWith(".md", Qt::CaseInsensitive)) {
-        newName += ".md";
+    if (!new_name.endsWith(".md", Qt::CaseInsensitive)) {
+        new_name += ".md";
     }
 
-    QString newPath = oldInfo.absolutePath() + "/" + newName;
+    QString new_path = old_info.absolutePath() + "/" + new_name;
 
-    if (QFile::exists(newPath)) {
+    if (QFile::exists(new_path)) {
         QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("该名称已存在，请重新输入。"));
         return;
     }
 
-    if (oldPath == _current_path) {
-        if (QFile::rename(oldPath, newPath)) {
-            _current_path = newPath;
-            setWindowTitle(newName + "[*] - Markedit");
+    if (old_path == _current_path) {
+        if (QFile::rename(old_path, new_path)) {
+            _current_path = new_path;
+            setWindowTitle(new_name + "[*] - Markedit");
             QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已重命名。"));
         } else {
             QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("重命名失败。"));
         }
     } else {
-        if (QFile::rename(oldPath, newPath)) {
+        if (QFile::rename(old_path, new_path)) {
             QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已重命名。"));
         } else {
             QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("重命名失败。"));
@@ -229,16 +229,16 @@ void MainWindow::saveAsSelectedFile()
     QModelIndex index = notes_tree->currentIndex();
     if (!index.isValid()) return;
 
-    QString srcPath = _notes_system->filePath(index);
-    QFileInfo srcInfo(srcPath);
-    if (!srcInfo.isFile()) return;
+    QString src_path = _notes_system->filePath(index);
+    QFileInfo src_info(src_path);
+    if (!src_info.isFile()) return;
 
-    QString savePath = QFileDialog::getSaveFileName(this, QObject::tr("另存为"),
-                                                    srcInfo.fileName(),
+    QString save_path = QFileDialog::getSaveFileName(this, QObject::tr("另存为"),
+                                                    src_info.fileName(),
                                                     "Markdown files (*.md)");
-    if (savePath.isEmpty()) return;
+    if (save_path.isEmpty()) return;
 
-    if (QFile::copy(srcPath, savePath)) {
+    if (QFile::copy(src_path, save_path)) {
         QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已另存。"));
     } else {
         QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("另存失败，请检查目标路径。"));

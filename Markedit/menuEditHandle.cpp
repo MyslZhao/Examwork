@@ -73,7 +73,7 @@ void MainWindow::showFindDialog()
 
     QLineEdit *find_edit = new QLineEdit;
     QCheckBox *case_check = new QCheckBox(QObject::tr("大小写区分"));
-    QCheckBox *whole_check = new QCheckBox(QObject::tr("全词匹配"));
+    QCheckBox *whole_check = new QCheckBox(QObject::tr("全字匹配"));
     QCheckBox *regex_check = new QCheckBox(QObject::tr("RegEx模式"));
 
     QDialogButtonBox *btn_box = new QDialogButtonBox(QDialogButtonBox::Ok |
@@ -132,7 +132,7 @@ void MainWindow::showReplaceDialog()
     QLineEdit *replace_edit = new QLineEdit;
 
     QCheckBox *case_check = new QCheckBox(QObject::tr("大小写区分"));
-    QCheckBox *whole_check = new QCheckBox(QObject::tr("全局匹配"));
+    QCheckBox *whole_check = new QCheckBox(QObject::tr("全字匹配"));
     QCheckBox *regex_check = new QCheckBox(QObject::tr("RegEx模式"));
 
     QHBoxLayout *btn_layout = new QHBoxLayout;

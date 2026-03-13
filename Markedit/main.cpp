@@ -4,6 +4,7 @@
  *
  * @file    main.cpp
  * @brief   主程序入口文件
+ * NOTE: 该文件为Qt自动生成文件，基本无需改动
  *
  * @author  MyslZhao
  */

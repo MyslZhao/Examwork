@@ -33,6 +33,11 @@ set(PROJECT_SOURCES
 add_executable(Markedit ${PROJECT_SOURCES}
 )
 
+target_sources(Markedit PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/zh_CN.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/en_US.ts
+)
+
 target_link_libraries(Markedit PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
 )
@@ -47,11 +52,39 @@ install(TARGETS Markedit
     BUNDLE DESTINATION .
 )
 
-qt_add_translations(Markedit
-    TS_FILES
-        translations/zh_CN.ts
-        translations/en_US.ts
+get_target_property(lrelease_executable Qt${QT_VERSION_MAJOR}::lrelease IMPORTED_LOCATION)
+if(NOT lrelease_executable OR NOT EXISTS ${lrelease_executable})
+    message(FATAL_ERROR "lrelease not found. Please check your Qt installation.")
+endif()
+
+set(TRANSLATIONS_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/translations)
+file(MAKE_DIRECTORY ${TRANSLATIONS_OUTPUT_DIR})
+
+set(TS_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/zh_CN.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/en_US.ts
 )
+
+# 方便编辑.ts文件
+set_source_files_properties(${TS_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
+list(APPEND PROJECT_SOURCES ${TS_FILES})
+
+foreach(ts_file ${TS_FILES})
+    get_filename_component(ts_name ${ts_file} NAME_WE)
+    set(qm_file ${TRANSLATIONS_OUTPUT_DIR}/${ts_name}.qm)
+
+    add_custom_command(
+        OUTPUT ${qm_file}
+        COMMAND ${lrelease_executable} ${ts_file} -qm ${qm_file}
+        DEPENDS ${ts_file}
+        COMMENT "Generating ${qm_file}"
+    )
+    list(APPEND QM_FILES ${qm_file})
+endforeach()
+
+add_custom_target(translations ALL DEPENDS ${QM_FILES})
+
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/translations)
 
 include(CPack)
 

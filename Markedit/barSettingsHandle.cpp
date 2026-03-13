@@ -15,6 +15,7 @@
 #include <QSpinBox>
 #include <QDialogButtonBox>
 #include <QSettings>
+#include <QMessageBox>
 
 /**
  * @brief 显示设置窗口
@@ -38,6 +39,18 @@ void MainWindow::showSettingsDialog()
     layout -> addWidget(new QLabel(QObject::tr("字号:")));
     layout -> addWidget(size_spin);
 
+    QComboBox *lang_combo = new QComboBox;
+    lang_combo->addItem("中文", "zh_CN");
+    lang_combo->addItem("English", "en_US");
+
+    QSettings settings("config.ini", QSettings::IniFormat);
+    QString currentLang = settings.value("language", "zh_CN").toString();
+    int index = lang_combo->findData(currentLang);
+    if (index != -1) lang_combo->setCurrentIndex(index);
+
+    layout->addWidget(new QLabel(QObject::tr("语言:")));
+    layout->addWidget(lang_combo);
+
     QDialogButtonBox *btn_box = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout -> addWidget(btn_box);
 
@@ -50,6 +63,12 @@ void MainWindow::showSettingsDialog()
         selected_font.setPointSize(size_spin -> value());
         _applyFontSettings(selected_font);
         _saveSettings(selected_font);
+
+        QString selectedLang = lang_combo->currentData().toString();
+        QSettings langSettings("config.ini", QSettings::IniFormat);
+        langSettings.setValue("language", selectedLang);
+
+        _switchLanguage(selectedLang);
     }
 }
 
@@ -86,4 +105,21 @@ void MainWindow::_saveSettings(const QFont &font)
     QSettings settings("config.ini", QSettings::IniFormat);
     settings.setValue("font/family", font.family());
     settings.setValue("font/size", font.pointSize());
+}
+
+/**
+ * @brief 切换窗口语言
+ * @param[in] lang_code 语言
+ */
+void MainWindow::_switchLanguage(const QString &lang_code)
+{
+    qApp->removeTranslator(&m_translator);
+
+    QString qmPath = QApplication::applicationDirPath() + "/translations/" + lang_code + ".qm";
+    if (m_translator.load(qmPath)) {
+        qApp->installTranslator(&m_translator);
+        ui->retranslateUi(this);
+    } else {
+        QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("无法加载语言文件: ") + qmPath);
+    }
 }

@@ -124,11 +124,6 @@
     <string>新建笔记(&amp;M)</string>
    </property>
   </action>
-  <action name="action_ls">
-   <property name="text">
-    <string>打开笔记(&amp;L)</string>
-   </property>
-  </action>
   <action name="action_cp">
    <property name="text">
     <string>添加到笔记...(&amp;C)</string>

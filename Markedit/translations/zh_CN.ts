@@ -5,145 +5,134 @@
     <name>MainWindow</name>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="172"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="169"/>
         <source>Markedit</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="43"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="192"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="188"/>
         <source>文件(&amp;F)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="59"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="193"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="189"/>
         <source>编辑(&amp;E)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="69"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="194"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="190"/>
         <source>帮助(&amp;H)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="84"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="173"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="170"/>
         <source>新建文件(&amp;N)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="89"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="174"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="171"/>
         <source>打开文件(&amp;O)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="94"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="175"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="172"/>
         <source>保存(&amp;S)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="99"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="176"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="173"/>
         <source>另存为(&amp;A)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="104"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="177"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="174"/>
         <source>撤销(&amp;Z)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="109"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="178"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="175"/>
         <source>重做(&amp;Y)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="114"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="179"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="176"/>
         <source>查找(&amp;F)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="119"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="180"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="177"/>
         <source>替换(&amp;R)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="124"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="181"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="178"/>
         <source>新建笔记(&amp;M)</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="129"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="182"/>
-        <source>打开笔记(&amp;L)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="134"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="183"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="179"/>
         <source>添加到笔记...(&amp;C)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="139"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="184"/>
+        <location filename="../mainwindow.ui" line="134"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="180"/>
         <source>从笔记移除...(&amp;F)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="144"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="185"/>
+        <location filename="../mainwindow.ui" line="139"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="181"/>
         <source>丢弃笔记(&amp;D)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="149"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="186"/>
+        <location filename="../mainwindow.ui" line="144"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="182"/>
         <source>退出(&amp;X)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="154"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="187"/>
+        <location filename="../mainwindow.ui" line="149"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="183"/>
         <source>Markdown教程(&amp;G)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="159"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="188"/>
+        <location filename="../mainwindow.ui" line="154"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="184"/>
         <source>文档(&amp;D)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="164"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="189"/>
+        <location filename="../mainwindow.ui" line="159"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="185"/>
         <source>许可证(&amp;L)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="169"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="190"/>
+        <location filename="../mainwindow.ui" line="164"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="186"/>
         <source>报告问题(&amp;R)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="174"/>
-        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="191"/>
+        <location filename="../mainwindow.ui" line="169"/>
+        <location filename="../build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug/Markedit_autogen/include/ui_mainwindow.h" line="187"/>
         <source>关于(&amp;A)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../barNotesHandle.cpp" line="139"/>
-        <source>没有可移动的目标笔记。</source>
         <translation></translation>
     </message>
 </context>
@@ -207,6 +196,7 @@
         <location filename="../barNotesHandle.cpp" line="213"/>
         <location filename="../barNotesHandle.cpp" line="219"/>
         <location filename="../barNotesHandle.cpp" line="244"/>
+        <location filename="../barSettingsHandle.cpp" line="123"/>
         <location filename="../menuFileHandle.cpp" line="114"/>
         <location filename="../menuFileHandle.cpp" line="175"/>
         <location filename="../menuFileHandle.cpp" line="221"/>
@@ -233,6 +223,11 @@
         <location filename="../menuFileHandle.cpp" line="459"/>
         <location filename="../statusBarHandle.cpp" line="135"/>
         <source>提示</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../barNotesHandle.cpp" line="139"/>
+        <source>没有可移动的目标笔记。</source>
         <translation></translation>
     </message>
     <message>
@@ -297,47 +292,67 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../barSettingsHandle.cpp" line="25"/>
+        <location filename="../barNotesHandle.cpp" line="242"/>
+        <source>文件已另存。</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../barNotesHandle.cpp" line="244"/>
+        <source>另存失败，请检查目标路径。</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../barSettingsHandle.cpp" line="26"/>
         <source>设置</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../barSettingsHandle.cpp" line="31"/>
+        <location filename="../barSettingsHandle.cpp" line="32"/>
         <source>字体:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../barSettingsHandle.cpp" line="38"/>
+        <location filename="../barSettingsHandle.cpp" line="39"/>
         <source>字号:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="66"/>
+        <location filename="../barSettingsHandle.cpp" line="51"/>
+        <source>语言:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../barSettingsHandle.cpp" line="123"/>
+        <source>无法加载语言文件: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="67"/>
         <source>&lt;h2 style = &apos;color: #545555&apos;&gt;预览区域&lt;/h2&gt;&lt;p style = &apos;color: #656565&apos;&gt;在左边开始写Markdown代码&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="139"/>
+        <location filename="../mainwindow.cpp" line="140"/>
         <source>当前未打开笔记</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="157"/>
+        <location filename="../mainwindow.cpp" line="158"/>
         <source>行 1, 列 1   </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="210"/>
-        <source>&lt;h2&gt;Markedit&lt;/h2&gt;&lt;p&gt;版本 0.1&lt;/p&gt;&lt;p&gt;一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。&lt;/p&gt;&lt;p&gt;项目主页：&lt;a href=&apos;https://github.com/yourusername/yourrepo&apos;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright © 2026 MyslZhao&lt;/p&gt;</source>
-        <translation></translation>
+        <location filename="../mainwindow.cpp" line="211"/>
+        <source>&lt;h2&gt;Markedit&lt;/h2&gt;&lt;p&gt;版本 0.1&lt;/p&gt;&lt;p&gt;一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。&lt;/p&gt;&lt;p&gt;项目主页：&lt;a href=&apos;https://github.com/MyslZhao/Examwork&apos;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright © 2026 MyslZhao&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="217"/>
+        <location filename="../mainwindow.cpp" line="218"/>
         <source>关于 Markedit</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="318"/>
+        <location filename="../mainwindow.cpp" line="326"/>
         <source>&lt;p style = &apos;color: #656565&apos;&gt;&lt;i&gt;没有文本可以预览...&lt;/i&gt;&lt;/p&gt;</source>
         <translation></translation>
     </message>
@@ -351,11 +366,6 @@
         <location filename="../menuEditHandle.cpp" line="75"/>
         <location filename="../menuEditHandle.cpp" line="134"/>
         <source>大小写区分</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../menuEditHandle.cpp" line="76"/>
-        <source>全词匹配</source>
         <translation></translation>
     </message>
     <message>
@@ -376,9 +386,10 @@
         <translation></translation>
     </message>
     <message>
+        <location filename="../menuEditHandle.cpp" line="76"/>
         <location filename="../menuEditHandle.cpp" line="135"/>
-        <source>全局匹配</source>
-        <translation></translation>
+        <source>全字匹配</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../menuEditHandle.cpp" line="140"/>
@@ -457,8 +468,8 @@
     </message>
     <message>
         <location filename="../menuFileHandle.cpp" line="169"/>
-        <source>文件以保存到笔记。</source>
-        <translation></translation>
+        <source>文件已保存到笔记。</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../menuFileHandle.cpp" line="176"/>

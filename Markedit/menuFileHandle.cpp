@@ -166,7 +166,7 @@ void MainWindow::addToNote()
         {
             QMessageBox::information(this,
                                      QObject::tr("成功"),
-                                     QObject::tr("文件以保存到笔记。")
+                                     QObject::tr("文件已保存到笔记。")
                                      );
         }
         else
@@ -186,7 +186,7 @@ void MainWindow::addToNote()
     {
         QMessageBox::information(this,
                                  QObject::tr("提示 "),
-                                 QObject::tr("文件以存在于该笔记中。")
+                                 QObject::tr("文件已存在于该笔记中。")
                                  );
         return;
     }
@@ -307,7 +307,7 @@ void MainWindow::_whetherSave(const QStringList &files)
 {
     QMessageBox quirey(this);
     quirey.setWindowTitle(QObject::tr("移除文件"));
-    quirey.setText(QObject::tr("选择被移除文件的处理方式:");
+    quirey.setText(QObject::tr("选择被移除文件的处理方式:"));
 
     QPushButton *delete_btn = quirey.addButton(QObject::tr("直接删除"), QMessageBox::DestructiveRole);
     QPushButton *presave_btn = quirey.addButton(QObject::tr("另存为后删除"), QMessageBox::ActionRole);

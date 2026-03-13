@@ -66,7 +66,7 @@ void Highlighter::_set_highlight_style(){
     unorderedlist_format.setForeground(QColor(0xD9, 0xD2, 0x0F));
 
     // 内联代码 浅灰色背景 Courier new字体
-    code_format.setBackground(QColor(0xEA, 0xEA, 0xEA));
+    code_format.setBackground(QColor(0x5C, 0x5C, 0x5C));
     code_format.setFontFamilies(QStringList() << "Courier New");
 
     // 转义字符 深青色 斜体

@@ -43,3 +43,5 @@ install(TARGETS Markedit
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     BUNDLE DESTINATION .
 )
+
+include(CPack)

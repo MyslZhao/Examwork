@@ -2,11 +2,10 @@ name: "CodeQL Advanced"
 
 on:
   push:
-分支: [ "main" ]
-  pull_request:
-分支: [ "main" ]
+    分支:
+      - main
   schedule:
-    - cron: '39 18 * * 1'
+  - cron: '00 8 * * *'
 
 jobs:
   analyze:

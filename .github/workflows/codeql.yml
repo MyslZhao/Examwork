@@ -75,7 +75,7 @@ jobs:
           vcpkg-${{ runner.os }}-
 
     - name: Install Qt via vcpkg
-      if: teps.cache-vcpkg.outputs.cache-hit != 'true'
+      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       run: |
         cd vcpkg
         .\vcpkg install --triplet x64-windows   # 使用清单模式，自动安装 vcpkg.json 中的依赖

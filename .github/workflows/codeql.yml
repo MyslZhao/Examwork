@@ -72,7 +72,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         cd vcpkg
-        .\vcpkg install qt6-base
+        .\vcpkg install qtbase qttools
 
     - name: Add to path (Windows)
       if: runner.os == 'Windows'

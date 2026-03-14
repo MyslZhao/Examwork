@@ -88,6 +88,7 @@ install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/translations)
 
 include(CPack)
 
+set(CPACK_PACKAGE_CONTACT "MyslZhao <vsetmysl@outlook.com>")
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Markedit - A simple Markdown editor")

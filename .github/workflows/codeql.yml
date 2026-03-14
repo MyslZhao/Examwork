@@ -1,130 +1,104 @@
-name: "CodeQL Advanced"
+name: "CodeQL"
 
 on:
   push:
-    分支:
-      - main
+    分支: [ "main" ]
+  pull_request:
+    分支: [ "main" ]
   schedule:
-  - cron: '00 8 * * *'
+    - cron: '0 8 * * 1'
 
 jobs:
-  analyze:
-    name: Analyze (${{ matrix.language }})
-    # Runner size impacts CodeQL analysis time. To learn more, please see:
-    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
-    #   - https://gh.io/supported-runners-and-hardware-resources
-    #   - https://gh.io/using-larger-runners (GitHub.com only)
-    # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ matrix.os }}
+  analyze-linux:
+    name: Analyze (Linux)
+    runs-on: ubuntu-latest
     permissions:
-      # required for all workflows
-      security-events: write
-
-      # required to fetch internal or private CodeQL packs
-      packages: read
-
-      # only required for workflows in private repositories
       actions: read
       contents: read
+      security-events: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        include:
-        - language: actions
-          build-mode: none
-        - language: c-cpp
-          build-mode: manual
-        # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
-        # Use `c-cpp` to analyze code written in C, C++ or both
-        # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
-        # Use 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
-        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
-        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
-        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
-        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Add any setup steps before running the `github/codeql-action/init` action.
-    # This includes steps like installing compilers or runtimes (`actions/setup-node`
-    # or others). This is typically only required for manual builds.
-    # - name: Setup runtime (example)
-    #   uses: actions/setup-example@v1
-
-    # Initializes the CodeQL tools for scanning.
     - name: Install dependencies (Linux)
-      if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install -y cmake ninja-build qt6-base-dev
+        sudo apt install -y cmake ninja-build qt6-base-dev qt6-tools-dev
 
-    - name: Install dependencies (Windows)
-      if: runner.os == 'Windows'
-      run : |
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: c-cpp
+        build-mode: manual
+
+    - name: Configure CMake (Linux)
+      run: |
+        rm -rf build
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON
+
+    - name: Build (Linux)
+      run: |
+        cd build
+        cmake --build . --config Debug --verbose
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:c-cpp"
+
+  analyze-windows:
+    name: Analyze (Windows)
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install vcpkg (Windows)
+      shell: pwsh
+      run: |
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg
         .\bootstrap-vcpkg.bat
 
-    - name: Install Qt (Windows)
-      if: runner.os == 'Windows'
+    - name: Install Qt via vcpkg (Windows)
+      shell: pwsh
       run: |
         cd vcpkg
         .\vcpkg install qtbase qttools
 
-    - name: Add to path (Windows)
-      if: runner.os == 'Windows'
+    - name: Add vcpkg to PATH (Windows)
+      shell: pwsh
       run: echo "${{ github.workspace }}\vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        
+
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
+      uses: github/codeql-action/init@v3
       with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
+        languages: c-cpp
+        build-mode: manual
 
-        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
-        # queries: security-extended,security-and-quality
-
-    # If the analyze step fails for one of the languages you are analyzing with
-    # "We were unable to automatically build your code", modify the matrix above
-    # to set the build mode to "manual" for that language. Then modify this step
-    # to build your code.
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - name: Config CMake (Linux)
-      if: matrix.os == 'Linux'
-      shell: bash
-      run: |
-        mkdir -p build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Debug
-
-    - name: Build (Linux)
-      if: matrix.os == 'Linux'
-      shell: bash
-      run: |
-        cd build
-        cmake --build . --config Debug
-        
     - name: Configure CMake (Windows)
-      if: runner.os == 'Windows'
+      shell: pwsh
       run: |
-        mkdir build
+        Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
+        New-Item -ItemType Directory -Path build | Out-Null
         cd build
-        cmake .. -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" -DCMAKE_BUILD_TYPE=Debug
+        cmake .. -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON
 
     - name: Build (Windows)
-      if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         cd build
-        cmake --build . --config Debug
+        cmake --build . --config Debug --verbose
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
+      uses: github/codeql-action/analyze@v3
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:c-cpp"

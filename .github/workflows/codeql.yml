@@ -97,7 +97,7 @@ jobs:
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
     - name: Config CMake (Linux)
-      if: matrix.build-mode == 'manual' && matrix.os == 'Linux'
+      if: matrix.os == 'Linux'
       shell: bash
       run: |
         mkdir -p build
@@ -105,7 +105,7 @@ jobs:
         cmake .. -DCMAKE_BUILD_TYPE=Debug
 
     - name: Build (Linux)
-      if: matrix.build-mode == 'manual' && matrix.os == 'Linux'
+      if: matrix.os == 'Linux'
       shell: bash
       run: |
         cd build

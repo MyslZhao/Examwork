@@ -37,7 +37,7 @@ jobs:
         rm -rf build
         mkdir -p build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON
+        cmake -S Markedit -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON
 
     - name: Build (Linux)
       run: |

@@ -59,15 +59,30 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+    - name: Install vcpkg
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        cd vcpkg
+        .\bootstrap-vcpkg.bat
+
+    - name: Cache vcpkg
+      uses: actions/cache@v4
+      id: cache-vcpkg
       with:
-        version: '6.5.3'
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_mingw'
-        modules: 'qtbase qttools' 
-        
+        path: vcpkg/installed
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-
+
+    - name: Install Qt via vcpkg
+      if: teps.cache-vcpkg.outputs.cache-hit != 'true'
+      run: |
+        cd vcpkg
+        .\vcpkg install --triplet x64-windows   # 使用清单模式，自动安装 vcpkg.json 中的依赖
+
+    - name: Add vcpkg to PATH
+      run: echo "${{ github.workspace }}\vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
@@ -75,15 +90,14 @@ jobs:
         build-mode: manual
 
     - name: Configure CMake (Windows)
-      shell: pwsh
       run: |
         Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
-        New-Item -ItemType Directory -Path build | Out-Null
-        cd build
-        cmake -S Markedit -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON
+        cmake -S Markedit -B build `
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+          -DCMAKE_BUILD_TYPE=Debug `
+          -DCMAKE_VERBOSE_MAKEFILE=ON
 
-    - name: Build (Windows)
-      shell: pwsh
+    - name: Build
       run: |
         cd build
         cmake --build . --config Debug --verbose

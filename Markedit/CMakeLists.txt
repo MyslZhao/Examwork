@@ -11,7 +11,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS LinguistTools Widgets)
 
 qt_standard_project_setup(
-    I18N_TRANSLATED_LANGUAGES zh_CN en_US # 替换为你需要的语言
+    I18N_TRANSLATED_LANGUAGES zh_CN en_US
 )
 
 # 项目源文件
@@ -88,3 +88,13 @@ install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/translations)
 
 include(CPack)
 
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Markedit - A simple Markdown editor")
+set(CPACK_PACKAGE_VENDOR "MyslZhao")
+set(CPACK_PACKAGE_CONTACT "your-email@example.com")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "MyslZhao")
+
+set(CPACK_GENERATOR "DEB")
+
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6widgets6")

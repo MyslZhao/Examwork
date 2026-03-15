@@ -72,6 +72,7 @@ jobs:
           Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
           cmake -S Markedit -B build `
             -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DQt6_DIR="${{ github.workspace }}\vcpkg\installed\x64-windows\share\qt6" `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_VERBOSE_MAKEFILE=ON `
             -G "Visual Studio 17 2022" -A x64
@@ -128,6 +129,7 @@ jobs:
           Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
           cmake -S Markedit -B build `
             -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DQt6_DIR="${{ github.workspace }}\vcpkg\installed\x86-windows\share\qt6" `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_VERBOSE_MAKEFILE=ON `
             -G "Visual Studio 17 2022" -A Win32

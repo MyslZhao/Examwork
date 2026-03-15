@@ -2,9 +2,9 @@ name: "CodeQL"
 
 on:
   push:
-    分支: [ "main" ]
+    branches: [ "main" ]
   pull_request:
-    分支: [ "main" ]
+    branches: [ "main" ]
   schedule:
     - cron: '0 8 * * 1'
 
@@ -95,7 +95,8 @@ jobs:
           cmake -S Markedit -B build `
             -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
             -DCMAKE_BUILD_TYPE=Debug `
-            -DCMAKE_VERBOSE_MAKEFILE=ON
+            -DCMAKE_VERBOSE_MAKEFILE=ON `
+            -G "Visual Studio 17 2022" -A x64
 
       - name: Build
         run: |

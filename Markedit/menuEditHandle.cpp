@@ -328,7 +328,7 @@ void MainWindow::replaceAll(const QString &target_text, const QString &new_text,
     }
     else
     {
-        cursor = ui -> markdownEdit -> document() -> find(target, 0, flags);
+        cursor = ui -> markdownEdit -> document() -> find(target_text, 0, flags);
         while (!cursor.isNull())
         {
             cursor.insertText(new_text);

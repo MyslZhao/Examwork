@@ -110,13 +110,23 @@ void MainWindow::removeSelectedFile()
                                         QObject::tr("该文件正在编辑中，确定要删除吗？"),
                                         QMessageBox::Yes | QMessageBox::No);
         if (ret != QMessageBox::Yes) return;
-        newFile();
     }
 
     QFile file(path);
     if (file.remove()) {
+        if (path == _current_path)
+        {
+            ui -> markdownEdit -> clear();
+            ui -> markdownEdit -> document() -> setModified(false);
+
+            _is_untitled = true;
+            _current_path.clear();
+            _setCurrentFileName(QString());
+        }
         QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已移除。"));
-    } else {
+    }
+    else
+    {
         QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("无法删除文件: ") + file.errorString());
     }
 }

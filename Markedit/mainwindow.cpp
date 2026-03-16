@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化相关变量
     _current_path = QString();
     _is_untitled = true;
-    setWindowTitle("Markedit[*]");
+    setWindowTitle("[*] - Markedit");
     new Highlighter(ui -> markdownEdit -> document());
     _current_encoding = "UTF-8";
     _notes_path = QApplication::applicationDirPath() + "/notes";
@@ -306,6 +306,9 @@ MainWindow::MainWindow(QWidget *parent)
     QSettings settings("config.ini", QSettings::IniFormat);
     QString lang = settings.value("language", "zh_CN").toString();
     _switchLanguage(lang);
+
+    // 设置窗口标题
+    _setCurrentFileName(QString());
 }
 
 /**

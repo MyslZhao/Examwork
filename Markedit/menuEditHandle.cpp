@@ -235,7 +235,7 @@ void MainWindow::findNext(const QString &text, QTextDocument::FindFlags flags, b
 
         if (!result.isNull())
         {
-            edit -> setTextCursor(cursor);
+            edit -> setTextCursor(result);
             found = true;
         }
     }
@@ -319,6 +319,16 @@ void MainWindow::replaceAll(const QString &target_text, const QString &new_text,
         }
 
         cursor = ui -> markdownEdit -> document() -> find(regex, 0, flags);
+        while (!cursor.isNull())
+        {
+            cursor.insertText(new_text);
+            counter += 1;
+            cursor = ui -> markdownEdit -> document() -> find(regex, cursor.position(), flags);
+        }
+    }
+    else
+    {
+        cursor = ui -> markdownEdit -> document() -> find(target, 0, flags);
         while (!cursor.isNull())
         {
             cursor.insertText(new_text);

@@ -124,24 +124,41 @@ jobs:
           $triplet = "x86-windows"
           $vcpkgRoot = "${{ github.workspace }}\vcpkg"
           $installDir = "$vcpkgRoot\installed\$triplet"
-          
-          # 如果安装目录不存在，强制重新安装
+          $shareDir = "$installDir\share"
+
+          Write-Host "Checking installation directory: $installDir"
           if (-not (Test-Path $installDir)) {
-            Write-Host "Installation directory $installDir does not exist. Forcing reinstall..."
+            Write-Host "Installation directory does not exist. Listing contents of $vcpkgRoot\installed:"
+            if (Test-Path "$vcpkgRoot\installed") {
+              Get-ChildItem "$vcpkgRoot\installed"
+            } else {
+              Write-Host "$vcpkgRoot\installed does not exist either."
+            }
+            Write-Host "Forcing reinstall..."
             & "$vcpkgRoot\vcpkg" install --triplet $triplet --recurse
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "vcpkg install failed with exit code $LASTEXITCODE"
+              exit $LASTEXITCODE
+            }
             if (-not (Test-Path $installDir)) {
+              Write-Host "Reinstall still failed. Listing contents of $vcpkgRoot\installed after reinstall:"
+              if (Test-Path "$vcpkgRoot\installed") {
+                Get-ChildItem "$vcpkgRoot\installed"
+              }
               Write-Host "Reinstall failed; exiting."
               exit 1
             }
           }
-          
-          $shareDir = "$installDir\share"
+
           if (-not (Test-Path $shareDir)) {
             Write-Host "Share directory $shareDir not found. Forcing reinstall..."
             & "$vcpkgRoot\vcpkg" install --triplet $triplet --recurse
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "vcpkg install failed with exit code $LASTEXITCODE"
+              exit $LASTEXITCODE
+            }
           }
-          
-          # 查找 Qt6Config.cmake
+
           $qt6Config = Get-ChildItem -Path $shareDir -Recurse -Filter "Qt6Config.cmake" -ErrorAction Stop | Select-Object -First 1
           $qt6Dir = $qt6Config.DirectoryName
           Write-Host "Found Qt6Config.cmake in $qt6Dir"

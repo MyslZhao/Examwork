@@ -121,6 +121,24 @@ jobs:
         run: |
           .\vcpkg\vcpkg install --triplet x86-windows
 
+      - name: Verify Qt6 installation
+        run: |
+          $qt6Share = "${{ github.workspace }}\vcpkg\installed\x86-windows\share"
+          Write-Host "Checking for Qt6Config.cmake in $qt6Share"
+          Get-ChildItem -Path $qt6Share -Recurse -Filter "Qt6Config.cmake" | ForEach-Object {
+            Write-Host "Found: $($_.FullName)"
+            # 将找到的目录设置到环境变量，供后续步骤使用
+            $qt6Dir = $_.DirectoryName
+            echo "Qt6_DIR=$qt6Dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+          if (-not $env:Qt6_DIR) {
+            Write-Host "Qt6Config.cmake not found. Forcing reinstall of dependencies."
+            .\vcpkg\vcpkg install --triplet x86-windows --no-cache
+            # 重新查找
+            $qt6Dir = (Get-ChildItem -Path $qt6Share -Recurse -Filter "Qt6Config.cmake" | Select-Object -First 1).DirectoryName
+            echo "Qt6_DIR=$qt6Dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+
       - name: Add vcpkg to PATH
         run: echo "${{ github.workspace }}\vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
@@ -129,7 +147,7 @@ jobs:
           Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
           cmake -S Markedit -B build `
             -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
-            -DQt6_DIR="${{ github.workspace }}\vcpkg\installed\x86-windows\share\qt6" `
+            -DQt6_DIR="${{ env.Qt6_DIR }}" `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_VERBOSE_MAKEFILE=ON `
             -G "Visual Studio 17 2022" -A Win32

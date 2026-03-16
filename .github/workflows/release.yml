@@ -84,7 +84,6 @@ jobs:
 
       - name: Deploy Qt dependencies (x64)
         run: |
-          # 使用 vcpkg 安装的 windeployqt（路径固定）
           & "${{ github.workspace }}\vcpkg\installed\x64-windows\tools\qt6\bin\windeployqt.exe" --release build\Release\Markedit.exe
 
       - name: Upload artifact (x64)
@@ -116,18 +115,33 @@ jobs:
             vcpkg-${{ runner.os }}-x86-
             vcpkg-${{ runner.os }}-
 
-      - name: Install dependencies if cache miss
+      - name: Install dependencies (x86)
         if: steps.cache-vcpkg-x86.outputs.cache-hit != 'true'
         run: .\vcpkg\vcpkg install --triplet x86-windows
 
       - name: Verify Qt6 installation (x86)
         run: |
-          $installDir = "${{ github.workspace }}\vcpkg\installed\x86-windows"
+          $triplet = "x86-windows"
+          $vcpkgRoot = "${{ github.workspace }}\vcpkg"
+          $installDir = "$vcpkgRoot\installed\$triplet"
+          
+          # 如果安装目录不存在，强制重新安装
+          if (-not (Test-Path $installDir)) {
+            Write-Host "Installation directory $installDir does not exist. Forcing reinstall..."
+            & "$vcpkgRoot\vcpkg" install --triplet $triplet --recurse
+            if (-not (Test-Path $installDir)) {
+              Write-Host "Reinstall failed; exiting."
+              exit 1
+            }
+          }
+          
           $shareDir = "$installDir\share"
           if (-not (Test-Path $shareDir)) {
-            Write-Host "Qt share directory not found. Forcing reinstall..."
-            .\vcpkg\vcpkg install --triplet x86-windows --recurse
+            Write-Host "Share directory $shareDir not found. Forcing reinstall..."
+            & "$vcpkgRoot\vcpkg" install --triplet $triplet --recurse
           }
+          
+          # 查找 Qt6Config.cmake
           $qt6Config = Get-ChildItem -Path $shareDir -Recurse -Filter "Qt6Config.cmake" -ErrorAction Stop | Select-Object -First 1
           $qt6Dir = $qt6Config.DirectoryName
           Write-Host "Found Qt6Config.cmake in $qt6Dir"

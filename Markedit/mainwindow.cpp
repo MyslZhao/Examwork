@@ -210,7 +210,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->action_about, &QAction::triggered, [this]() {
         QString aboutText = QObject::tr(
                              "<h2>Markedit</h2>"
-                             "<p>版本 0.1</p>"
+                             "<p>版本 0.2</p>"
                              "<p>一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。</p>"
                              "<p>项目主页：<a href='https://github.com/MyslZhao/Examwork'>GitHub</a></p>"
                              "<p>Copyright © 2026 MyslZhao</p>"

@@ -86,14 +86,19 @@ jobs:
         run: |
           & "${{ github.workspace }}\vcpkg\installed\x64-windows\tools\qt6\bin\windeployqt.exe" --release build\Release\Markedit.exe
 
+      - name: Package (x64)
+        run: |
+          # 将 build\Release 目录下的所有文件（包括 exe 和 Qt DLL）打包为 zip
+          Compress-Archive -Path build\Release\* -DestinationPath Markedit-windows-x64.zip
+
       - name: Upload artifact (x64)
         uses: actions/upload-artifact@v4
         with:
-          name: Markedit-windows-x64
-          path: build\Release\
+          name: Markedit-windows-x64-zip
+          path: Markedit-windows-x64.zip
 
   create-release:
-    needs: [release-linux, release-windows-x64]  # 只等待 Linux 和 x64 任务
+    needs: [release-linux, release-windows-x64]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -119,6 +124,6 @@ jobs:
           prerelease: ${{ steps.check_prerelease.outputs.is_prerelease }}
           files: |
             artifacts/Markedit-linux-deb/*.deb
-            artifacts/Markedit-windows-x64/*
+            artifacts/Markedit-windows-x64-zip/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

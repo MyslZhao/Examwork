@@ -113,7 +113,6 @@ jobs:
           key: vcpkg-${{ runner.os }}-x86-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
             vcpkg-${{ runner.os }}-x86-
-            vcpkg-${{ runner.os }}-
 
       - name: Install dependencies (x86)
         if: steps.cache-vcpkg-x86.outputs.cache-hit != 'true'
@@ -131,6 +130,8 @@ jobs:
             Write-Host "Installation directory does not exist. Listing contents of $vcpkgRoot\installed:"
             if (Test-Path "$vcpkgRoot\installed") {
               Get-ChildItem "$vcpkgRoot\installed"
+              Write-Host "Deleting entire installed directory to force fresh install..."
+              Remove-Item -Path "$vcpkgRoot\installed" -Recurse -Force
             } else {
               Write-Host "$vcpkgRoot\installed does not exist either."
             }

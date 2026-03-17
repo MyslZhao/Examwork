@@ -111,6 +111,7 @@ jobs:
         with:
           path: vcpkg/installed
           key: vcpkg-${{ runner.os }}-x86-${{ hashFiles('vcpkg.json') }}
+          # 仅匹配以 -x86- 结尾的缓存，避免误用 x64 缓存
           restore-keys: |
             vcpkg-${{ runner.os }}-x86-
 

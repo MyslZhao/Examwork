@@ -92,110 +92,8 @@ jobs:
           name: Markedit-windows-x64
           path: build\Release\
 
-  release-windows-x86:
-    name: Windows x86 (MSVC)
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install vcpkg
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
-
-      - name: Cache vcpkg (x86)
-        id: cache-vcpkg-x86
-        uses: actions/cache@v4
-        with:
-          path: vcpkg/installed
-          key: vcpkg-${{ runner.os }}-x86-${{ hashFiles('vcpkg.json') }}
-          # 仅匹配以 -x86- 结尾的缓存，避免误用 x64 缓存
-          restore-keys: |
-            vcpkg-${{ runner.os }}-x86-
-
-      - name: Install dependencies (x86)
-        if: steps.cache-vcpkg-x86.outputs.cache-hit != 'true'
-        run: .\vcpkg\vcpkg install --triplet x86-windows
-
-      - name: Verify Qt6 installation (x86)
-        run: |
-          $triplet = "x86-windows"
-          $vcpkgRoot = "${{ github.workspace }}\vcpkg"
-          $installDir = "$vcpkgRoot\installed\$triplet"
-          $shareDir = "$installDir\share"
-
-          Write-Host "Checking installation directory: $installDir"
-          if (-not (Test-Path $installDir)) {
-            Write-Host "Installation directory does not exist. Listing contents of $vcpkgRoot\installed:"
-            if (Test-Path "$vcpkgRoot\installed") {
-              Get-ChildItem "$vcpkgRoot\installed"
-              Write-Host "Deleting entire installed directory to force fresh install..."
-              Remove-Item -Path "$vcpkgRoot\installed" -Recurse -Force
-            } else {
-              Write-Host "$vcpkgRoot\installed does not exist either."
-            }
-            Write-Host "Forcing reinstall..."
-            & "$vcpkgRoot\vcpkg" install --triplet $triplet --recurse
-            if ($LASTEXITCODE -ne 0) {
-              Write-Host "vcpkg install failed with exit code $LASTEXITCODE"
-              exit $LASTEXITCODE
-            }
-            if (-not (Test-Path $installDir)) {
-              Write-Host "Reinstall still failed. Listing contents of $vcpkgRoot\installed after reinstall:"
-              if (Test-Path "$vcpkgRoot\installed") {
-                Get-ChildItem "$vcpkgRoot\installed"
-              }
-              Write-Host "Reinstall failed; exiting."
-              exit 1
-            }
-          }
-
-          if (-not (Test-Path $shareDir)) {
-            Write-Host "Share directory $shareDir not found. Forcing reinstall..."
-            & "$vcpkgRoot\vcpkg" install --triplet $triplet --recurse
-            if ($LASTEXITCODE -ne 0) {
-              Write-Host "vcpkg install failed with exit code $LASTEXITCODE"
-              exit $LASTEXITCODE
-            }
-          }
-
-          $qt6Config = Get-ChildItem -Path $shareDir -Recurse -Filter "Qt6Config.cmake" -ErrorAction Stop | Select-Object -First 1
-          $qt6Dir = $qt6Config.DirectoryName
-          Write-Host "Found Qt6Config.cmake in $qt6Dir"
-          echo "Qt6_DIR=$qt6Dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Add vcpkg to PATH
-        run: echo "${{ github.workspace }}\vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-      - name: Configure CMake (x86)
-        run: |
-          Remove-Item -Path build -Recurse -Force -ErrorAction SilentlyContinue
-          cmake -S Markedit -B build `
-            -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
-            -DQt6_DIR="${{ env.Qt6_DIR }}" `
-            -DCMAKE_BUILD_TYPE=Release `
-            -DCMAKE_VERBOSE_MAKEFILE=ON `
-            -G "Visual Studio 17 2022" -A Win32
-
-      - name: Build (x86)
-        run: |
-          cd build
-          cmake --build . --config Release --verbose
-
-      - name: Deploy Qt dependencies (x86)
-        run: |
-          & "${{ github.workspace }}\vcpkg\installed\x86-windows\tools\qt6\bin\windeployqt.exe" --release build\Release\Markedit.exe
-
-      - name: Upload artifact (x86)
-        uses: actions/upload-artifact@v4
-        with:
-          name: Markedit-windows-x86
-          path: build\Release\
-
   create-release:
-    needs: [release-linux, release-windows-x64, release-windows-x86]
+    needs: [release-linux, release-windows-x64]  # 只等待 Linux 和 x64 任务
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -222,6 +120,5 @@ jobs:
           files: |
             artifacts/Markedit-linux-deb/*.deb
             artifacts/Markedit-windows-x64/*
-            artifacts/Markedit-windows-x86/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

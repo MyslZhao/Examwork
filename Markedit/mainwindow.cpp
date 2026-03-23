@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent)
                                  "在左边开始写Markdown代码"
                                  "</p>"
         ));
+    ui->previewBrowser->setOpenExternalLinks(true);
 
     // 侧边栏部分
     activity_dock = new QDockWidget(this);

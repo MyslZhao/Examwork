@@ -53,7 +53,7 @@ void Highlighter::_set_highlight_style(){
     italic_format.setFontItalic(true);
 
     // 引用块 蓝色
-    quote_format.setForeground(QColor(0x1D, 0x7A, 0x9B));
+    quote_format.setForeground(QColor(0xC1, 0x9C, 0xC9));
 
     // 链接 文本:浅绿色
     linktext_format.setForeground(QColor(0x90, 0xEE, 0x90));

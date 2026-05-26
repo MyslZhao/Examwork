@@ -67,19 +67,19 @@ void MainWindow::showFindDialog()
     }
 
     QDialog dialog(this);
-    dialog.setWindowTitle(QObject::tr("查找"));
+    dialog.setWindowTitle(tr("查找"));
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QLineEdit *find_edit = new QLineEdit;
-    QCheckBox *case_check = new QCheckBox(QObject::tr("大小写区分"));
-    QCheckBox *whole_check = new QCheckBox(QObject::tr("全字匹配"));
-    QCheckBox *regex_check = new QCheckBox(QObject::tr("RegEx模式"));
+    QCheckBox *case_check = new QCheckBox(tr("大小写区分"));
+    QCheckBox *whole_check = new QCheckBox(tr("全字匹配"));
+    QCheckBox *regex_check = new QCheckBox(tr("RegEx模式"));
 
     QDialogButtonBox *btn_box = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                        QDialogButtonBox::Cancel);
 
-    layout -> addWidget(new QLabel(QObject::tr("查找内容(支持正则):")));
+    layout -> addWidget(new QLabel(tr("查找内容(支持正则):")));
 
     layout -> addWidget(find_edit);
     layout -> addWidget(case_check);
@@ -90,12 +90,9 @@ void MainWindow::showFindDialog()
 
     connect(btn_box, &QDialogButtonBox::accepted, [&]()
         {
-
             QTextDocument::FindFlags flags = _getFlags(case_check, whole_check);
-
-            findNext(find_edit -> text(), flags, regex_check -> isChecked());
+            findNext(find_edit->text(), flags, regex_check->isChecked());
             dialog.accept();
-
         }
     );
     connect(btn_box, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
@@ -124,27 +121,27 @@ void MainWindow::showReplaceDialog()
     }
 
     QDialog dialog(this);
-    dialog.setWindowTitle(QObject::tr("替换"));
+    dialog.setWindowTitle(tr("替换"));
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QLineEdit *find_edit = new QLineEdit;
     QLineEdit *replace_edit = new QLineEdit;
 
-    QCheckBox *case_check = new QCheckBox(QObject::tr("大小写区分"));
-    QCheckBox *whole_check = new QCheckBox(QObject::tr("全字匹配"));
-    QCheckBox *regex_check = new QCheckBox(QObject::tr("RegEx模式"));
+    QCheckBox *case_check = new QCheckBox(tr("大小写区分"));
+    QCheckBox *whole_check = new QCheckBox(tr("全字匹配"));
+    QCheckBox *regex_check = new QCheckBox(tr("RegEx模式"));
 
     QHBoxLayout *btn_layout = new QHBoxLayout;
 
-    QPushButton *next_btn = new QPushButton(QObject::tr("下一项"));
-    QPushButton *replace_btn = new QPushButton(QObject::tr("替换"));
-    QPushButton *replacall_btn = new QPushButton(QObject::tr("全部替换"));
-    QPushButton *close_btn = new QPushButton(QObject::tr("关闭"));
+    QPushButton *next_btn = new QPushButton(tr("下一项"));
+    QPushButton *replace_btn = new QPushButton(tr("替换"));
+    QPushButton *replacall_btn = new QPushButton(tr("全部替换"));
+    QPushButton *close_btn = new QPushButton(tr("关闭"));
 
-    layout -> addWidget(new QLabel(QObject::tr("替换内容:")));
+    layout -> addWidget(new QLabel(tr("替换内容:")));
     layout -> addWidget(find_edit);
-    layout -> addWidget(new QLabel(QObject::tr("替换为:")));
+    layout -> addWidget(new QLabel(tr("替换为:")));
     layout -> addWidget(replace_edit);
 
     layout -> addWidget(case_check);
@@ -192,7 +189,7 @@ void MainWindow::showReplaceDialog()
  */
 void MainWindow::_showRegexError(const QString &errormsg)
 {
-    QMessageBox::warning(this, QObject::tr("表达式错误"), QObject::tr("无效的RegEx: ") + errormsg);
+    QMessageBox::warning(this, tr("表达式错误"), tr("无效的RegEx: ") + errormsg);
     return;
 }
 
@@ -213,40 +210,47 @@ void MainWindow::findNext(const QString &text, QTextDocument::FindFlags flags, b
         return;
     }
 
-    bool found = false;
+    QTextCursor cursor = ui->markdownEdit->textCursor();
+    QTextCursor searchStart = cursor;
+    if (cursor.hasSelection())
+    {
+        searchStart.setPosition(cursor.selectionEnd());
+    }
 
+    bool found = false;
     if (use_regex)
     {
         QRegularExpression regex(text);
-
         if (!regex.isValid())
         {
-            return _showRegexError(regex.errorString());
+            _showRegexError(regex.errorString());
+            return;
+        }
+        if (!(flags & QTextDocument::FindCaseSensitively))
+        {
+            regex.setPatternOptions(regex.patternOptions() | QRegularExpression::CaseInsensitiveOption);
         }
 
-        QPlainTextEdit *edit = ui->markdownEdit;
-        QTextCursor cursor = edit -> textCursor();
-
-        QTextCursor result = edit -> document() -> find(
-            regex,
-            cursor.selectionStart(),
-            flags
-            );
-
+        QTextCursor result = ui->markdownEdit->document()->find(regex, searchStart, flags);
         if (!result.isNull())
         {
-            edit -> setTextCursor(result);
+            ui->markdownEdit->setTextCursor(result);
             found = true;
         }
     }
     else
     {
-        found = ui -> markdownEdit -> find(text, flags);
+        QTextCursor result = ui->markdownEdit->document()->find(text, searchStart, flags);
+        if (!result.isNull())
+        {
+            ui->markdownEdit->setTextCursor(result);
+            found = true;
+        }
     }
 
     if (!found)
     {
-        QMessageBox::information(this, QObject::tr("查找"), QObject::tr("未找到目标项"));
+        QMessageBox::information(this, tr("查找"), tr("未找到匹配项。"));
     }
 }
 
@@ -259,36 +263,48 @@ void MainWindow::findNext(const QString &text, QTextDocument::FindFlags flags, b
  */
 void MainWindow::replace(const QString &target_text, const QString &new_text, QTextDocument::FindFlags flags, bool use_regex)
 {
-    QTextCursor cursor = ui -> markdownEdit -> textCursor();
+    if (target_text.isEmpty())
+    {
+        return;
+    }
+
+    QTextCursor cursor = ui->markdownEdit->textCursor();
     bool has_selection = cursor.hasSelection();
+    bool replaced = false;
 
     if (use_regex)
     {
         QRegularExpression regex(target_text);
         if (!regex.isValid())
         {
-            return _showRegexError(regex.errorString());
+            _showRegexError(regex.errorString());
+            return;
         }
-
-        if (has_selection)
+        if (!(flags & QTextDocument::FindCaseSensitively))
         {
-            QString selected = cursor.selectedText();
-            QRegularExpressionMatch match = regex.match(selected);
-            if (match.hasMatch() && match.captured(0) == selected)
-            {
-                cursor.insertText(new_text);
-            }
+            regex.setPatternOptions(regex.patternOptions() | QRegularExpression::CaseInsensitiveOption);
         }
 
-        findNext(target_text, flags, use_regex);
+        if (has_selection && regex.match(cursor.selectedText()).hasMatch())
+        {
+            cursor.insertText(new_text);
+            ui->markdownEdit->setTextCursor(cursor);
+            replaced = true;
+        }
     }
     else
     {
         if (has_selection && cursor.selectedText() == target_text)
         {
             cursor.insertText(new_text);
+            ui->markdownEdit->setTextCursor(cursor);
+            replaced = true;
         }
-        findNext(target_text, flags, false);
+    }
+
+    if (!replaced)
+    {
+        findNext(target_text, flags, use_regex);
     }
 }
 
@@ -306,8 +322,9 @@ void MainWindow::replaceAll(const QString &target_text, const QString &new_text,
         return;
     }
 
-    QTextCursor cursor(ui -> markdownEdit -> document());
-    cursor.beginEditBlock();
+    QTextDocument *doc = ui->markdownEdit->document();
+    QTextCursor editCursor(doc);
+    editCursor.beginEditBlock();
 
     int counter = 0;
     if (use_regex)
@@ -315,28 +332,42 @@ void MainWindow::replaceAll(const QString &target_text, const QString &new_text,
         QRegularExpression regex(target_text);
         if (!regex.isValid())
         {
-            return _showRegexError(regex.errorString());
+            editCursor.endEditBlock();
+            _showRegexError(regex.errorString());
+            return;
+        }
+        if (!(flags & QTextDocument::FindCaseSensitively))
+        {
+            regex.setPatternOptions(regex.patternOptions() | QRegularExpression::CaseInsensitiveOption);
         }
 
-        cursor = ui -> markdownEdit -> document() -> find(regex, 0, flags);
+        QTextCursor cursor = doc->find(regex, 0, flags);
         while (!cursor.isNull())
         {
+            if (cursor.selectedText().isEmpty())
+            {
+                QTextCursor next(cursor);
+                next.setPosition(cursor.position() + 1);
+                cursor = doc->find(regex, next, flags);
+                continue;
+            }
+
             cursor.insertText(new_text);
             counter += 1;
-            cursor = ui -> markdownEdit -> document() -> find(regex, cursor.position(), flags);
+            cursor = doc->find(regex, cursor, flags);
         }
     }
     else
     {
-        cursor = ui -> markdownEdit -> document() -> find(target_text, 0, flags);
+        QTextCursor cursor = doc->find(target_text, 0, flags);
         while (!cursor.isNull())
         {
             cursor.insertText(new_text);
             counter += 1;
-            cursor = ui -> markdownEdit -> document() -> find(target_text, cursor.position(), flags);
+            cursor = doc->find(target_text, cursor, flags);
         }
     }
 
-    cursor.endEditBlock();
-    QMessageBox::information(this, QObject::tr("全局替换"), QString(QObject::tr("共替换 %1 处")).arg(counter));
+    editCursor.endEditBlock();
+    QMessageBox::information(this, tr("全部替换"), tr("共替换 %1 处").arg(counter));
 }

@@ -25,6 +25,7 @@
 #include <QSettings>
 // -*- encoding: utf-8 -*-
 
+//预定义可选用的编码标准
 const QHash<QString, QStringConverter::Encoding> MainWindow::ENCOMAP = {
     {"UTF-8", QStringConverter::Utf8},
     {"UTF-16", QStringConverter::Utf16},
@@ -36,7 +37,10 @@ const QHash<QString, QStringConverter::Encoding> MainWindow::ENCOMAP = {
 
 /**
  * @brief ui界面处理入口
- * @param parent
+ * @param parent 父窗口
+ * @details
+ *
+ *
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,11 +49,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //初始化相关变量
+
+    //空文件状态
     _current_path = QString();
     _is_untitled = true;
-    setWindowTitle("[*] - Markedit");
-    new Highlighter(ui -> markdownEdit -> document());
+    setWindowTitle("Markedit");
     _current_encoding = "UTF-8";
+
+    //初始空笔记状态
     _notes_path = QApplication::applicationDirPath() + "/notes";
     QDir src_dir(_notes_path);
     if (!src_dir.exists())
@@ -57,14 +64,17 @@ MainWindow::MainWindow(QWidget *parent)
         src_dir.mkdir(_notes_path);
     }
 
+    //高亮器初始化
+    new Highlighter(ui -> markdownEdit -> document());
+
     // HACK:无法在.ui中添加Qsplliter组件，手动设置Qsplitter
     QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
-    splitter -> addWidget(ui -> markdownEdit);
-    splitter -> addWidget(ui -> previewBrowser);
+    splitter -> addWidget(ui -> markdownEdit);  // .ui里的QPlainTextEdit对象
+    splitter -> addWidget(ui -> previewBrowser); // .ui里的QTextBroswer对象
     setCentralWidget(splitter);
     splitter -> setSizes({400, 200});
 
-    ui -> previewBrowser -> setHtml(QObject::tr(
+    ui -> previewBrowser -> setHtml(tr(    // BUG: setHtml不支持非重启tr翻译转换
                                  "<h2 style = 'color: #545555'>"
                                  "预览区域"
                                  "</h2>"
@@ -100,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent)
     side_dock -> setWidget(side_stack);
 
     // "大纲"功能按钮及侧边显示
-    outline_action = activity_bar -> addAction("大纲");
+    outline_action = activity_bar -> addAction(tr("📄"));
     outline_action -> setCheckable(true);
     outline_action -> setChecked(false);
 
@@ -113,7 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
     side_stack -> addWidget(outline_tree);
 
     // "笔记"功能按钮及侧边显示
-    notes_action = activity_bar -> addAction("笔记");
+    notes_action = activity_bar -> addAction("📂");
     notes_action -> setCheckable(true);
     notes_action -> setChecked(false);
 
@@ -138,7 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
     notes_layout -> setContentsMargins(0, 5, 0, 0);
     notes_layout -> setSpacing(2);
 
-    _note_name = new QLabel(QObject::tr("当前未打开笔记"));
+    _note_name = new QLabel(tr("当前未打开笔记"));
     _note_name -> setAlignment(Qt::AlignCenter);
     _note_name -> setStyleSheet("font-weight: bold; color: #888;");
 
@@ -149,14 +159,14 @@ MainWindow::MainWindow(QWidget *parent)
     side_stack -> addWidget(note_page);
 
     // "设置"功能按钮
-    settings_action = activity_bar -> addAction("设置");
+    settings_action = activity_bar -> addAction("⚙");
     settings_action -> setCheckable(false);
 
     // 状态栏
     QStatusBar *status = statusBar();
 
     cursor_pos = new QLabel(this);
-    cursor_pos -> setText(QObject::tr("行 1, 列 1   "));
+    cursor_pos -> setText(tr("行 1, 列 1   "));
     status -> addPermanentWidget(cursor_pos);
 
     encoding_btn = new QPushButton("UTF-8", this);
@@ -209,14 +219,14 @@ MainWindow::MainWindow(QWidget *parent)
         }
     );
     connect(ui->action_about, &QAction::triggered, [this]() {
-        QString aboutText = QObject::tr(
+        QString aboutText = tr(
                              "<h2>Markedit</h2>"
                              "<p>版本 0.2</p>"
                              "<p>一个简单的 Markdown 编辑器，使用 Qt 6 和 C++17 编写。</p>"
                              "<p>项目主页：<a href='https://github.com/MyslZhao/Examwork'>GitHub</a></p>"
                              "<p>Copyright © 2026 MyslZhao</p>"
                                         );
-        QMessageBox::about(this, QObject::tr("关于 Markedit"), aboutText);
+        QMessageBox::about(this, tr("关于 Markedit"), aboutText);
     });
 
     // “大纲”功能连接
@@ -327,7 +337,7 @@ void MainWindow::_updatePreview()
 {
     QString markdown_text = ui -> markdownEdit -> toPlainText();
     if (markdown_text.isEmpty()) {
-        ui -> previewBrowser -> setHtml(QObject::tr(
+        ui -> previewBrowser -> setHtml(tr(
             "<p style = 'color: #656565'>"
              "<i>没有文本可以预览...</i>"
              "</p>"

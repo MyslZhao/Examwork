@@ -75,7 +75,7 @@ void MainWindow::onOutlineItemClicked(const QModelIndex &index)
     QTextBlock block = ui->markdownEdit->document()->findBlockByNumber(block_num);
     if (block.isValid()) {
         QTextCursor cursor(block);
-        ui -> markdownEdit -> setTextCursor(cursor);
-        ui -> markdownEdit -> ensureCursorVisible();
+        ui->markdownEdit->setTextCursor(cursor);
+        ui->markdownEdit->setFocus();
     }
 }

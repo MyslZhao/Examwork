@@ -32,30 +32,16 @@ void MainWindow::onNoteTreeClicked(const QModelIndex &index)
         return;
     }
 
-    QString path = _notes_system -> filePath(index);
+    QString path = _notes_system->filePath(index);
     QFileInfo file_info(path);
 
     if (file_info.isDir())
     {
-        _current_note_path = path;
-        _note_name -> setText(file_info.fileName());
-
-        QDir dir(path);
-        dir.setNameFilters(QStringList() << "*.md");
-        dir.setFilter(QDir::Files);
-        QStringList files = dir.entryList();
-        if (!files.isEmpty())
-        {
-            files.sort();
-            QString f_file = path + "/" + files.first();
-            _loadFile(f_file);
-        }
+        return;
     }
-    else if (file_info.isFile() && file_info.suffix() == "md")
+    else if (file_info.isFile())
     {
-        _loadFile(path);
-        _current_note_path = file_info.absolutePath();
-        _note_name -> setText(QFileInfo(_current_note_path).fileName());
+        ui->statusbar->showMessage(tr("已选择笔记文件: %1").arg(file_info.fileName()), 2000);
     }
 }
 
@@ -65,13 +51,13 @@ void MainWindow::onNoteTreeClicked(const QModelIndex &index)
  */
 void MainWindow::showNotesMenu(const QPoint &pos)
 {
-    QModelIndex index = notes_tree -> indexAt(pos);
+    QModelIndex index = notes_tree->indexAt(pos);
     if (!index.isValid())
     {
         return;
     }
 
-    QString path = _notes_system -> filePath(index);
+    QString path = _notes_system->filePath(index);
     QFileInfo info(path);
 
     if (!info.isFile() || info.suffix() != "md")
@@ -80,17 +66,26 @@ void MainWindow::showNotesMenu(const QPoint &pos)
     }
 
     QMenu menu(this);
-    QAction *move_act = menu.addAction(QObject::tr("移动"));
-    QAction *remove_act = menu.addAction(QObject::tr("移除"));
-    QAction *rename_act = menu.addAction(QObject::tr("重命名"));
-    QAction *savas_act = menu.addAction(QObject::tr("另存为"));
+    QAction *move_act = menu.addAction(tr("移动"));
+    QAction *remove_act = menu.addAction(tr("移除"));
+    QAction *rename_act = menu.addAction(tr("重命名"));
+    QAction *save_as_act = menu.addAction(tr("另存为"));
 
-    connect(remove_act, &QAction::triggered, this, &MainWindow::removeSelectedFile);
-    connect(move_act, &QAction::triggered, this, &MainWindow::moveSelectedFile);
-    connect(rename_act, &QAction::triggered, this, &MainWindow::renameSelectedFile);
-    connect(savas_act, &QAction::triggered, this, &MainWindow::saveAsSelectedFile);
+    QAction *act = menu.exec(notes_tree->viewport()->mapToGlobal(pos));
+    if (!act)
+    {
+        return;
+    }
 
-    menu.exec(notes_tree -> viewport() -> mapToGlobal(pos));
+    if (act == move_act) {
+        moveSelectedFile();
+    } else if (act == remove_act) {
+        removeSelectedFile();
+    } else if (act == rename_act) {
+        renameSelectedFile();
+    } else if (act == save_as_act) {
+        saveAsSelectedFile();
+    }
 }
 
 /**
@@ -150,36 +145,35 @@ void MainWindow::moveSelectedFile()
         return;
     }
 
-    bool ok;
-    QString target_note = QInputDialog::getItem(this, QObject::tr("选择目标笔记"),
-                                               QObject::tr("请选择要移动到的笔记:"),
-                                               note_folders, 0, false, &ok);
-    if (!ok) return;
+    QString target_note = QInputDialog::getItem(this, tr("选择目标笔记"),
+                                               tr("请选择要移动到的笔记:"),
+                                               note_folders, 0, false);
+    if (!target_note.isEmpty()) {
+        QString target_dir = _notes_path + "/" + target_note;
+        QString target_path = target_dir + "/" + src_info.fileName();
 
-    QString target_dir = _notes_path + "/" + target_note;
-    QString target_path = target_dir + "/" + src_info.fileName();
-
-    if (QFile::exists(target_path)) {
-        int ret = QMessageBox::question(this, QObject::tr("文件已存在"),
-                                        QObject::tr("目标笔记中已有同名文件，是否覆盖？"),
+        if (QFile::exists(target_path)) {
+            int ret = QMessageBox::question(this, tr("文件已存在"),
+                                        tr("目标笔记中已有同名文件，是否覆盖？"),
                                         QMessageBox::Yes | QMessageBox::No);
-        if (ret != QMessageBox::Yes) return;
-        QFile::remove(target_path);
-    }
-
-    if (src_path == _current_path) {
-        if (QFile::rename(src_path, target_path)) {
-            _current_path = target_path;
-            setWindowTitle(QFileInfo(target_path).fileName() + "[*] - Markedit");
-            QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已移动。"));
-        } else {
-            QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("移动失败。"));
+            if (ret != QMessageBox::Yes) return;
+            QFile::remove(target_path);
         }
-    } else {
-        if (!QFile::rename(src_path, target_path)) {
-            QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("移动失败。"));
+
+        if (src_path == _current_path) {
+            if (QFile::rename(src_path, target_path)) {
+                _current_path = target_path;
+                setWindowTitle(QFileInfo(target_path).fileName() + "[*] - Markedit");
+                QMessageBox::information(this, tr("成功"), tr("文件已移动。"));
+            } else {
+                QMessageBox::warning(this, tr("错误"), tr("移动失败。"));
+            }
         } else {
-            QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已移动。"));
+            if (!QFile::rename(src_path, target_path)) {
+                QMessageBox::warning(this, tr("错误"), tr("移动失败。"));
+            } else {
+                QMessageBox::information(this, tr("成功"), tr("文件已移动。"));
+            }
         }
     }
 }
@@ -197,8 +191,8 @@ void MainWindow::renameSelectedFile()
     if (!old_info.isFile()) return;
 
     bool ok;
-    QString new_name = QInputDialog::getText(this, QObject::tr("重命名文件"),
-                                            QObject::tr("输入新文件名（保留 .md 后缀）:"),
+    QString new_name = QInputDialog::getText(this, tr("重命名文件"),
+                                            tr("输入新文件名（保留 .md 后缀）:"),
                                             QLineEdit::Normal,
                                             old_info.fileName(), &ok);
     if (!ok || new_name.isEmpty()) return;
@@ -210,7 +204,7 @@ void MainWindow::renameSelectedFile()
     QString new_path = old_info.absolutePath() + "/" + new_name;
 
     if (QFile::exists(new_path)) {
-        QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("该名称已存在，请重新输入。"));
+        QMessageBox::warning(this, tr("错误"), tr("该名称已存在，请重新输入。"));
         return;
     }
 
@@ -218,15 +212,15 @@ void MainWindow::renameSelectedFile()
         if (QFile::rename(old_path, new_path)) {
             _current_path = new_path;
             setWindowTitle(new_name + "[*] - Markedit");
-            QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已重命名。"));
+            QMessageBox::information(this, tr("成功"), tr("文件已重命名。"));
         } else {
-            QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("重命名失败。"));
+            QMessageBox::warning(this, tr("错误"), tr("重命名失败。"));
         }
     } else {
         if (QFile::rename(old_path, new_path)) {
-            QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已重命名。"));
+            QMessageBox::information(this, tr("成功"), tr("文件已重命名。"));
         } else {
-            QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("重命名失败。"));
+            QMessageBox::warning(this, tr("错误"), tr("重命名失败。"));
         }
     }
 }
@@ -243,14 +237,14 @@ void MainWindow::saveAsSelectedFile()
     QFileInfo src_info(src_path);
     if (!src_info.isFile()) return;
 
-    QString save_path = QFileDialog::getSaveFileName(this, QObject::tr("另存为"),
+    QString save_path = QFileDialog::getSaveFileName(this, tr("另存为"),
                                                     src_info.fileName(),
                                                     "Markdown files (*.md)");
     if (save_path.isEmpty()) return;
 
     if (QFile::copy(src_path, save_path)) {
-        QMessageBox::information(this, QObject::tr("成功"), QObject::tr("文件已另存。"));
+        QMessageBox::information(this, tr("成功"), tr("文件已另存。"));
     } else {
-        QMessageBox::warning(this, QObject::tr("错误"), QObject::tr("另存失败，请检查目标路径。"));
+        QMessageBox::warning(this, tr("错误"), tr("另存失败，请检查目标路径。"));
     }
 }

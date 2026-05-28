@@ -11,7 +11,7 @@ Markedit为一个轻量级的、简易的Markdown编辑器。
 
 ## 安装
 
-下载发行的压缩包，解压运行Markedit.exe即可使用。（目前只有Windows 64-bit的发行版）
+下载发行的压缩包，解压运行Markedit.exe即可使用。（由于部分原因，目前只能显示中文）
 
 ## 额外说明
 
